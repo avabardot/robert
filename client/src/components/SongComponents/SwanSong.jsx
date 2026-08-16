@@ -387,17 +387,20 @@ const SwanSong = () => {
     index++;
   }, "8n").start();
 
-  const playASong = () => {
+  // Tone 15 dropped the Tone.Transport singleton in favour of getTransport(),
+  // and browsers will not start an audio context until a user gesture has
+  // resumed it, so wait for Tone.start() before the transport rolls.
+  const playASong = async () => {
     createSong();
-    Tone.start();
-    Tone.Transport.start();
+    await Tone.start();
+    Tone.getTransport().start();
     //setTimeout(() => {
-    //    Tone.Transport.stop();
+    //    Tone.getTransport().stop();
     //}, 5000);
   };
 
   const stopASong = () => {
-    Tone.Transport.stop();
+    Tone.getTransport().stop();
   };
 
   return (

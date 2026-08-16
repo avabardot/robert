@@ -1,41 +1,43 @@
-const express = require("express");
-const path = require("path");
-const mongoose = require("mongoose");
-const bodyParser = require('body-parser');
+require("dotenv").config({ quiet: true });
 
-require('./models/SchemaData');
+const fs = require("fs");
+const path = require("path");
+const express = require("express");
+const { connect } = require("./db");
+
+require("./models/SchemaData");
 
 const app = express();
-
-mongoose.Promise = global.Promise;
-mongoose.connect(process.env.MONGODB_URI || `mongodb://localhost/robert`,  {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useCreateIndex: true,
-  useFindAndModify: false
-} );
+const PORT = process.env.PORT || 5000;
+const CLIENT_BUILD = path.resolve(__dirname, "client", "build");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-app.use(bodyParser.json());
+require("./routes/robertRoutes")(app);
 
-require('./routes/robertRoutes')(app);
+app.use(express.static(CLIENT_BUILD));
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('client/build'));
-  
-  app.get('*', (req,res) => {
-      res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
-  });
-}
+// Everything that is not an API call belongs to the React router. In
+// development the client is served by Vite on :3000 and proxies /api here, so
+// this only matters once the client has been built.
+app.use((req, res) => {
+  const index = path.join(CLIENT_BUILD, "index.html");
 
-app.use(express.static("public"));
+  if (!fs.existsSync(index)) {
+    return res
+      .status(503)
+      .send(
+        "Robert has no body yet. Run `npm run build` to build the client, " +
+          "or `npm run dev` and open http://localhost:3000 instead."
+      );
+  }
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "./client/build/index.html"));
+  return res.sendFile(index);
 });
-const PORT = 5000;
-app.listen(process.env.PORT || 5000);//, () => {
-//  console.log(`🌎 ==> API server now on port ${PORT}!`);
-//});
+
+connect().finally(() => {
+  app.listen(PORT, () => {
+    console.log(`🌎 ==> Robert is awake on http://localhost:${PORT}`);
+  });
+});
