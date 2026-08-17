@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Stand-in strawberry texture.
+
+  The original scene textured these spheres with a photo hotlinked from
+  Pinterest through cors-anywhere.herokuapp.com. That proxy stopped serving
+  the public in 2021 and the images no longer load, so the world came up with
+  untextured buttons. This locally hosted tile keeps the strawberries red and
+  seeded until a real texture is dropped in its place.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <radialGradient id="berry" cx="35%" cy="30%" r="80%">
+      <stop offset="0%" stop-color="#ff5d54" />
+      <stop offset="55%" stop-color="#d81f2a" />
+      <stop offset="100%" stop-color="#7d0d17" />
+    </radialGradient>
+    <g id="seed">
+      <ellipse rx="5" ry="8" fill="#ffd97a" />
+      <ellipse rx="2.5" ry="4.5" fill="#f7c14b" />
+    </g>
+  </defs>
+
+  <rect width="512" height="512" fill="url(#berry)" />
+
+  <g opacity="0.9">
+    <use href="#seed" x="40" y="46" />
+    <use href="#seed" x="136" y="30" />
+    <use href="#seed" x="232" y="52" />
+    <use href="#seed" x="328" y="34" />
+    <use href="#seed" x="424" y="50" />
+
+    <use href="#seed" x="88" y="118" />
+    <use href="#seed" x="184" y="134" />
+    <use href="#seed" x="280" y="116" />
+    <use href="#seed" x="376" y="136" />
+    <use href="#seed" x="472" y="120" />
+
+    <use href="#seed" x="40" y="206" />
+    <use href="#seed" x="136" y="222" />
+    <use href="#seed" x="232" y="204" />
+    <use href="#seed" x="328" y="224" />
+    <use href="#seed" x="424" y="208" />
+
+    <use href="#seed" x="88" y="296" />
+    <use href="#seed" x="184" y="312" />
+    <use href="#seed" x="280" y="294" />
+    <use href="#seed" x="376" y="314" />
+    <use href="#seed" x="472" y="298" />
+
+    <use href="#seed" x="40" y="386" />
+    <use href="#seed" x="136" y="402" />
+    <use href="#seed" x="232" y="384" />
+    <use href="#seed" x="328" y="404" />
+    <use href="#seed" x="424" y="388" />
+
+    <use href="#seed" x="88" y="470" />
+    <use href="#seed" x="184" y="486" />
+    <use href="#seed" x="280" y="468" />
+    <use href="#seed" x="376" y="488" />
+    <use href="#seed" x="472" y="472" />
+  </g>
+</svg>

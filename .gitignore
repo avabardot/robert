@@ -2,3 +2,13 @@ node_modules
 .DS_Store
 .idea
 ExtraCode/
+
+# build output
+client/build
+
+# local config and logs
+.env
+*.log
+
+# wrangler local state
+.wrangler

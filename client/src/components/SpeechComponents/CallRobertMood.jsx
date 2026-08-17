@@ -2,22 +2,21 @@ import React from 'react'
 import { useStoreContext } from "../../services/GlobalState";
 import { SET_ROBERT_MOOD_RETURNING, DISPLAY_OBJECT, HIDE } from "../../services/actions";
 import robertService from '../../services/robertService';
-import { makeStyles } from '@material-ui/core/styles';
-import Popper from '@material-ui/core/Popper';
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    border: '1px solid red',
-    borderRadius: '1em',
-    padding: theme.spacing(1),
-    backgroundColor: '#8B0C14',
-    color: 'white',
-    textTransform: 'uppercase'
-  },
-}));
+import Popper from '@mui/material/Popper';
+
+// MUI dropped makeStyles after v4 and this popper only ever needed one rule,
+// so it is a plain style object now (padding is the old theme.spacing(1)).
+const paperStyle = {
+  border: '1px solid red',
+  borderRadius: '1em',
+  padding: '8px',
+  backgroundColor: '#8B0C14',
+  color: 'white',
+  textTransform: 'uppercase'
+};
 
 export default function CallRobertMood(props) {
 
-  const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleClick = (event) => {
@@ -67,7 +66,7 @@ export default function CallRobertMood(props) {
   return (
     <>
       <Popper id={id} open={open} anchorEl={anchorEl}>
-        <div className={classes.paper}>What's on Robert's Mind?</div>
+        <div style={paperStyle}>What's on Robert's Mind?</div>
       </Popper>
       <button onMouseLeave={handleClose} onMouseOver={handleClick} className="bottom-market" style={state.display} onClick={setRobertReturning}><i style={{ color: 'rgba(255, 53, 46, 0.46)', fontSize: '5em', textShadow: '1px 2px 0px #010000' }} className="fa fa-user" aria-hidden="true"></i></button>
     </>

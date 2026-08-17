@@ -1,9 +1,10 @@
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
-import Popover from '@material-ui/core/Popover';
-import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Popover from '@mui/material/Popover';
+import PopupState from 'material-ui-popup-state';
+import { bindTrigger, bindPopover } from 'material-ui-popup-state/hooks';
 
 export default function PopoverArt() {
   return (

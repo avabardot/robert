@@ -1,4 +1,3 @@
-import React from 'react';
 import React, {useState} from 'react';
 import { useStoreContext} from "../../../services/GlobalState";
 import { SET_ROBERT_MOOD_RETURNING, DISPLAY_OBJECT, HIDE } from "../../../services/actions";
@@ -43,4 +42,8 @@ export default function FirstVisit() {
    //         <button onClick={setRobertReturning}>{newButton}</button>
    //     </div>
    // )
+
+    // The greeting flow above is still commented out, so Robert renders
+    // nothing here rather than returning undefined.
+    return null;
 }

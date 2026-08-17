@@ -19,7 +19,7 @@ export default function YesNoButtons(props) {
     return (
         <div className="YesNoButtons">
             <YesButtonTasks {...props} />
-            <button className="bottom-market" onClick={resetTasks}><i style={{color: 'rgba(255, 53, 46, 0.46)', fontSize:'5em', textShadow: '1px 2px 0px #010000'}} class="fa fa-frown-o" aria-hidden="true"></i></button>
+            <button className="bottom-market" onClick={resetTasks}><i style={{color: 'rgba(255, 53, 46, 0.46)', fontSize:'5em', textShadow: '1px 2px 0px #010000'}} className="fa fa-frown-o" aria-hidden="true"></i></button>
         </div>
     )
     

@@ -1,0 +1,8 @@
+# Cloudflare Pages configuration.
+#
+# The static site is whatever `npm run build` puts in client/build; the API
+# lives in functions/api and is served by Pages Functions. The Express server
+# in server.js is for local development and non-Cloudflare hosts.
+name = "robert"
+pages_build_output_dir = "client/build"
+compatibility_date = "2026-08-17"
