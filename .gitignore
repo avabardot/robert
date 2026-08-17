@@ -9,3 +9,6 @@ client/build
 # local config and logs
 .env
 *.log
+
+# wrangler local state
+.wrangler
