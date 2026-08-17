@@ -11,15 +11,21 @@
     <link rel="manifest" href="/manifest.json">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--
-      A-Frame is pinned to 1.0.4 on purpose: the three community components
-      below (text-geometry, particle-system, extras.ocean) were written for
-      that era and have not been updated since. Upgrading A-Frame means
-      finding replacements for them first.
+      A-Frame and its community components are served from this site rather
+      than a CDN. If any one of these scripts fails to load there is no
+      window.AFRAME, and Robert's world is a blank page — this project has
+      already lost rawgit.com and cors-anywhere.herokuapp.com that way. See
+      public/vendor/README.md for versions and where they came from.
+
+      A-Frame is pinned to 1.0.4 on purpose: the three components below
+      (text-geometry, particle-system, extras.ocean) were written for that era
+      and have not been updated since. Upgrading A-Frame means finding
+      replacements for them first.
     -->
-    <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-    <script src="https://unpkg.com/aframe-text-geometry-component@^0.5.0/dist/aframe-text-geometry-component.min.js"></script>
-    <script src="https://unpkg.com/aframe-particle-system-component@1.0.x/dist/aframe-particle-system-component.min.js"></script>
-    <script src="https://unpkg.com/aframe-extras.ocean@%5E3.5.x/dist/aframe-extras.ocean.min.js"></script>
+    <script src="/vendor/aframe.min.js"></script>
+    <script src="/vendor/aframe-text-geometry-component.min.js"></script>
+    <script src="/vendor/aframe-particle-system-component.min.js"></script>
+    <script src="/vendor/aframe-extras.ocean.min.js"></script>
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Questrial&display=swap" rel="stylesheet">
     <title>TRANSPORTING ... SOUND ON ... MAYBE ROBERT WILL CREATE FOR YOU IF YOU ACTIVATE THE STRAWBERRIES ... REFRESH IF LOAD IS SLOW ...</title>
