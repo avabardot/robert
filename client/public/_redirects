@@ -1,4 +1,0 @@
-# Robert's routes (/world, /aboutrobert) live in the React router, not on disk.
-# Cloudflare Pages checks Functions and real files first, so this only catches
-# what is left over.
-/*  /index.html  200

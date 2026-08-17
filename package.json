@@ -12,7 +12,7 @@
     "server": "nodemon --ignore client server.js",
     "client": "npm start --prefix client",
     "build": "npm run build --prefix client",
-    "pages:dev": "wrangler pages dev",
+    "cf:dev": "wrangler dev",
     "start": "node server.js",
     "seed": "node scripts/seed.js"
   },

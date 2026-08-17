@@ -49,33 +49,36 @@ database is connected.
 | `npm run build` | Builds the client into `client/build` |
 | `npm start` | Serves the API and the built client on one port |
 | `npm run seed` | Loads `data/seed.js` into MongoDB |
-| `npm run pages:dev` | Serves the built client and the Pages Functions locally |
+| `npm run cf:dev` | Serves the built client and the Worker API locally |
 
-## Deploying to Cloudflare Pages
+## Deploying to Cloudflare
 
 Cloudflare has no long-running process, so `npm start` is not what runs there.
-Pages serves the built client, and the API is four read-only endpoints in
-`functions/api/`, answered from the same `data/seed.js` the local server falls
-back to. There is no database in that deployment: writes return `405`, and
-changing Robert's moods or projects means editing `data/seed.js` and
-redeploying.
+The Worker serves `client/build` as static assets, and `worker/index.js`
+answers the four read-only endpoints the front end calls from the same
+`data/seed.js` the local server falls back to. There is no database in that
+deployment: writes return `405`, and changing Robert's moods or projects means
+editing `data/seed.js` and redeploying.
 
-Build settings for the Pages project:
+`wrangler.toml` holds the routing: `/api/*` reaches the Worker first, and
+anything else that is not a real file falls back to `index.html` so `/world`
+and `/aboutrobert` survive a refresh.
+
+Settings for the Workers project:
 
 | Setting | Value |
 | --- | --- |
 | Build command | `npm run setup && npm run build` |
-| Build output directory | `client/build` (also in `wrangler.toml`) |
+| Deploy command | `npx wrangler deploy` |
 | Root directory | `/` |
 
-Node version comes from `.nvmrc`. `client/public/_redirects` sends unmatched
-paths to `index.html` so `/world` and `/aboutrobert` survive a refresh.
+Node version comes from `.nvmrc`.
 
 To check the whole thing locally the way Cloudflare will run it:
 
 ```bash
 npm run build
-npm run pages:dev
+npm run cf:dev
 ```
 
 ## USE
