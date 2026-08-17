@@ -1,8 +1,17 @@
-# Cloudflare Pages configuration.
+# Cloudflare Workers configuration.
 #
-# The static site is whatever `npm run build` puts in client/build; the API
-# lives in functions/api and is served by Pages Functions. The Express server
-# in server.js is for local development and non-Cloudflare hosts.
+# The client build in client/build is served as static assets; worker/index.js
+# answers /api/* from data/seed.js. The Express server in server.js is for
+# local development and non-Cloudflare hosts — it does not run here.
 name = "robert"
-pages_build_output_dir = "client/build"
+main = "worker/index.js"
 compatibility_date = "2026-08-17"
+
+[assets]
+directory = "./client/build"
+binding = "ASSETS"
+# Robert's routes (/world, /aboutrobert) live in the React router, so anything
+# that is not a real file falls back to index.html. The API has to reach the
+# Worker before that fallback swallows it.
+not_found_handling = "single-page-application"
+run_worker_first = ["/api/*"]
