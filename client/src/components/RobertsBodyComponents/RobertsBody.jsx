@@ -13,7 +13,8 @@ export default function RobertsBody(props) {
                 <div className="fade-in-second grid subgrid-1 green_one glass-host">
                     <StainedGlass cell={1}/>
                 </div>
-                <div className="fade-in-fifth grid subgrid-2">
+                <div className="fade-in-fifth grid subgrid-2 glass-host">
+                   <StainedGlass cell={2}/>
                    <RobertHead {...props}/>
                 </div>
                 <div className="grid fade-in-second green_two subgrid-3 glass-host">
@@ -23,7 +24,8 @@ export default function RobertsBody(props) {
                 <div className="grid fade-in-second green_three subgrid-4 glass-host">
                     <StainedGlass cell={4}/>
                 </div>
-                <div className="grid subgrid-5">
+                <div className="grid subgrid-5 glass-host">
+                    <StainedGlass cell={5}/>
                     <RobertStem {...props}/>
                 </div>
                 <div className="grid green_four fade-in-second subgrid-6 glass-host">
@@ -33,7 +35,8 @@ export default function RobertsBody(props) {
                 <div className="grid fade-in-second green_five subgrid-7 glass-host">
                     <StainedGlass cell={7}/>
                 </div>
-                <div className="grid fade-in-third subgrid-8">
+                <div className="grid fade-in-third subgrid-8 glass-host">
+                    <StainedGlass cell={8}/>
                     <RobertPlanter {...props}/>
                 </div>
                 <div className="grid fade-in-second green_six subgrid-9 glass-host">

@@ -6,6 +6,9 @@ import './StainedGlass.css';
 //
 // Three ways of making glass out of CSS, so they can be compared on the real
 // page. Pick one with ?glass=panes | gels | shards | off (default: panes).
+// Two more switches for trying things out:
+//   ?behind=on  - glass in the centre column too, behind Robert
+//   ?bg=black   - the page at night (handled in Pages/Home.jsx)
 //
 //   panes  - Robert's own technique. A CSS grid of empty divs, a hairline
 //            box-shadow for the lead, and his neon box-shadow recipe turned
@@ -23,6 +26,10 @@ function chosenVariant() {
     return VARIANTS.includes(asked) ? asked : 'panes';
 }
 
+function glassBehindRobert() {
+    return new URLSearchParams(window.location.search).get('behind') === 'on';
+}
+
 // Which third of the lancet each of Robert's outer cells is.
 const CELLS = {
     1: { side: 'left', row: 'top' },
@@ -31,6 +38,10 @@ const CELLS = {
     3: { side: 'right', row: 'top' },
     6: { side: 'right', row: 'middle' },
     9: { side: 'right', row: 'bottom' },
+    // The column Robert stands in. Only glazed with ?behind=on.
+    2: { side: 'centre', row: 'top' },
+    5: { side: 'centre', row: 'middle' },
+    8: { side: 'centre', row: 'bottom' },
 };
 
 // ---------------------------------------------------------------- panes ----
@@ -71,8 +82,39 @@ const PANES = {
     ],
 };
 
-function Panes({ row }) {
-    return PANES[row].map((piece, i) => {
+// The centre column is drawn as a left half and its mirror image, so it is
+// symmetrical about Robert's stem. Same 6 x 10 grid, but here column 6 runs
+// down the middle of him. Pale glass sits closest to him, like a halo, and
+// the green gathers at the bottom, where the ground would be.
+const PANES_BEHIND = {
+    top: [
+        '1/3/1/3 teal', '3/7/1/2 aqua',
+        '3/5/2/5 aqua', '5/7/2/5 pale',
+        '1/2/3/8 teal', '2/3/3/6 aqua', '2/3/6/8 cyan',
+        '3/4/5/9 teal', '4/7/5/9 pale',
+        '1/3/8/11 teal', '3/5/9/11 aqua', '5/7/9/11 pale',
+    ],
+    middle: [
+        '1/2/1/6 teal', '2/4/1/4 pale', '4/7/1/3 aqua',
+        '4/6/3/7 pale', '6/7/3/11 aqua',
+        '2/4/4/6 cyan',
+        '1/3/6/9 aqua', '3/4/6/11 teal',
+        '4/6/7/8 green', '4/6/8/11 pale',
+        '1/3/9/11 teal',
+    ],
+    bottom: [
+        '1/3/1/4 pale', '3/7/1/3 aqua',
+        '1/2/4/8 teal', '2/3/4/7 cyan',
+        '3/5/3/7 aqua', '5/7/3/7 pale',
+        '2/3/7/9 aqua',
+        '3/5/7/10 teal', '5/7/7/10 aqua',
+        '1/2/8/11 teal', '2/3/9/11 green',
+        '3/7/10/11 green',
+    ],
+};
+
+function Panes({ row, behind }) {
+    return (behind ? PANES_BEHIND : PANES)[row].map((piece, i) => {
         const [area, tone] = piece.split(' ');
         const [c1, c2, r1, r2] = area.split('/');
         return (
@@ -165,23 +207,38 @@ export default function StainedGlass({ cell }) {
     const [state] = useStoreContext();
     const variant = chosenVariant();
     const { side, row } = CELLS[cell];
+    const behind = side === 'centre';
 
     if (variant === 'off') return null;
+    if (behind && !glassBehindRobert()) return null;
 
-    const className = [
+    const light = (
+        <div className="glass-light">
+            {variant === 'panes' && <Panes row={row} behind={behind} />}
+            {variant === 'shards' && <Shards cell={cell} />}
+        </div>
+    );
+
+    const classes = (where) => [
         'glass',
         `glass--${variant}`,
-        `glass--${side}`,
+        `glass--${where}`,
         `glass--${row}`,
         state.awake === true ? 'glass--awake' : 'glass--asleep',
     ].join(' ');
 
-    return (
-        <div className={className} aria-hidden="true">
-            <div className="glass-light">
-                {variant === 'panes' && <Panes row={row} />}
-                {variant === 'shards' && <Shards cell={cell} />}
+    if (behind) {
+        return (
+            <div className="glass-behind" aria-hidden="true">
+                <div className={`${classes('left')} glass--inner`}>{light}</div>
+                <div className={`${classes('right')} glass--inner`}>{light}</div>
             </div>
+        );
+    }
+
+    return (
+        <div className={classes(side)} aria-hidden="true">
+            {light}
         </div>
     );
 }

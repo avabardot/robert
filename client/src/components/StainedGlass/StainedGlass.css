@@ -46,6 +46,37 @@
 .glass--top    { padding-bottom: 0; }
 .glass--bottom { padding-top: 0; }
 
+/* GLASS BEHIND ROBERT (?behind=on)
+   Two half-width pieces side by side, the right one mirrored, sitting under
+   everything else in his cell. For "under" to mean anything the cell has to
+   be its own stacking context, which is what isolation does. */
+.glass-host:has(> .glass-behind) {
+    isolation: isolate;
+    z-index: 1;
+}
+.glass-behind {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    display: flex;
+    pointer-events: none;
+}
+.glass-behind > .glass {
+    position: relative;
+    inset: auto;
+    flex: 1;
+    padding-left: 0;
+}
+.glass-behind > .glass > .glass-light { border-radius: 0; }
+
+/* Robert's stem has a solid black core (.plant-stem, z-index: -100) that has
+   never been visible: that z-index drops it behind the page background.
+   Isolating his cell would bring it back in front of the glass, so keep it
+   hidden, as it always has been. */
+.glass-host:has(> .glass-behind) .plant-stem {
+    visibility: hidden;
+}
+
 /* The right-hand lancet is the left one in a mirror. */
 .glass--right { transform: scaleX(-1); }
 
@@ -169,4 +200,29 @@
 @media (prefers-reduced-motion: reduce) {
     .glass,
     .glass--awake .glass-light { animation: none; }
+}
+
+/* NIGHT (?bg=black)
+   App.css asks for a near-black page with green text, but the About page's
+   stylesheet repaints .wrapper pale blue everywhere. This puts the night
+   back, on the home page only. */
+body.robert-night .wrapper {
+    background-color: #010000;
+    color: #66FF66;
+}
+
+/* Glass is see-through, and on a black page there is nothing behind it to
+   see: it goes grey. So at night each piece gets its own daylight to sit on,
+   and the lit window spills a little of its colour into the dark. */
+body.robert-night .glass-pane,
+body.robert-night .glass--gels .glass-light {
+    background-color: hsl(180 100% 97%);
+}
+body.robert-night .glass--awake {
+    filter: drop-shadow(0 0 0.7em hsl(var(--glass-cyan) / 0.55));
+}
+/* ...and with Robert asleep the window is properly dark. */
+body.robert-night .glass--asleep .glass-light {
+    filter: saturate(0.6) brightness(0.32);
+    opacity: 0.9;
 }
