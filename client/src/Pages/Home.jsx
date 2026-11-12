@@ -4,6 +4,7 @@ import "../Robert.css";
 import RobertSpeech from '../components/RobertSpeech';
 import RobertsBody from '../components/RobertsBodyComponents/RobertsBody';
 import WakeButton from "../components/Buttons/WakeButton";
+import Roundel from "../components/StainedGlass/Roundel";
 
 export default function Home(props) {
 
@@ -19,6 +20,7 @@ export default function Home(props) {
         <>
             <div className="RobertContainer">
                 <RobertsBody {...props}/>
+                <Roundel name="strawberry"/>
             </div>
             <div className= "SpeechContainer">
                 <RobertSpeech {...props}/>

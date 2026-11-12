@@ -1,0 +1,84 @@
+/* ROUNDELS
+   Small round windows hung outside Robert's. See Roundel.jsx. */
+
+.RobertContainer {
+    position: relative;
+}
+
+.roundel {
+    --size: 9em;
+    position: absolute;
+    top: 3.5em;
+    right: calc(100% + 2.5em);
+    height: var(--size);
+    width: var(--size);
+    border-radius: 50%;
+    /* The rim: a band of lead, heavier than the joints inside. */
+    box-shadow: 0 0 0 0.3em var(--glass-lead);
+    pointer-events: none;
+    animation: glass-power-on 2.4s 1.6s ease-out both;
+}
+
+/* No room beside the window: hang it underneath instead. */
+@media (max-width: 62em) {
+    .roundel {
+        position: relative;
+        top: auto;
+        right: auto;
+        justify-self: center;
+        margin: 2em 0 1em;
+    }
+}
+
+.roundel-glass {
+    border-radius: 50%;
+    background: var(--glass-lead);
+}
+
+/* Sky */
+.roundel-field {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr;
+    grid-template-rows: 1fr 1.5fr 1fr;
+}
+
+/* STRAWBERRY */
+.strawberry-berry {
+    position: absolute;
+    left: 25%;
+    top: 31%;
+    height: 56%;
+    width: 50%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1.1fr 1fr;
+    overflow: hidden;
+    /* Broad shoulders, and a point at the bottom. */
+    border-radius: 50% 50% 50% 50% / 34% 34% 66% 66%;
+    box-shadow: 0 0 0 calc(var(--glass-lead-width) * 2) var(--glass-lead);
+}
+/* Seeds: two offset rows of pale dots, painted over the whole berry. */
+.strawberry-seeds {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 0.11em 0.16em at center, hsl(var(--glass-pale)) 80%, transparent 100%) 0.1em 0.2em / 1.1em 1.3em,
+        radial-gradient(ellipse 0.11em 0.16em at center, hsl(var(--glass-pale)) 80%, transparent 100%) 0.65em 0.85em / 1.1em 1.3em;
+}
+
+/* Robert's leaf is a box with two opposite corners rounded off. */
+.strawberry-leaf {
+    position: absolute;
+    top: 17%;
+    height: 19%;
+    width: 19%;
+    border-radius: 0 85% 0 85%;
+    box-shadow:
+        0 0 0 calc(var(--glass-lead-width) * 1.5) var(--glass-lead),
+        inset 0 0 0.5em 0.05em hsl(var(--c) / 0.9);
+}
+.strawberry-leaf--left  { left: 27%; transform: rotate(-12deg); }
+.strawberry-leaf--right { left: 54%; transform: scaleX(-1) rotate(-12deg); }
+.strawberry-leaf--top   { left: 40.5%; top: 9%; transform: rotate(45deg); }

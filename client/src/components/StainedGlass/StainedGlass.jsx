@@ -11,6 +11,7 @@ import './StainedGlass.css';
 //   ?behind=off - leave the centre column, where Robert stands, unglazed
 //   ?bg=pale    - the old pale blue page (handled in Pages/Home.jsx)
 //   ?halo=clear - nothing inside the oval round his head (default: one pane)
+//   ?halo=lit   - light the halo up with the rest of the window when he wakes
 //
 //   panes  - Robert's own technique. A CSS grid of empty divs, a hairline
 //            box-shadow for the lead, and his neon box-shadow recipe turned
@@ -34,6 +35,10 @@ function glassBehindRobert() {
 
 function haloIsGlass() {
     return new URLSearchParams(window.location.search).get('halo') !== 'clear';
+}
+
+function haloLightsUp() {
+    return new URLSearchParams(window.location.search).get('halo') === 'lit';
 }
 
 // Which third of the lancet each of Robert's outer cells is.
@@ -251,7 +256,9 @@ export default function StainedGlass({ cell }) {
     ].join(' ');
 
     if (behind) {
-        const lit = state.awake === true ? 'glass--awake' : 'glass--asleep';
+        // The glass directly behind Robert stays dark even once he is awake,
+        // so he stands out against the lit window. The halo is part of that.
+        const lit = state.awake === true && haloLightsUp() ? 'glass--awake' : 'glass--asleep';
         return (
             <>
                 <div className={classes('centre')} aria-hidden="true">{light}</div>
