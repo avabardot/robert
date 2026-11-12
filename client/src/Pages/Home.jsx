@@ -7,9 +7,10 @@ import WakeButton from "../components/Buttons/WakeButton";
 
 export default function Home(props) {
 
-    // Experiment: ?bg=black turns the page dark. See StainedGlass.css.
+    // Robert's page is dark (see NIGHT in StainedGlass.css). ?bg=pale shows
+    // the pale blue page it used to be.
     useEffect(() => {
-        const night = new URLSearchParams(window.location.search).get('bg') === 'black';
+        const night = new URLSearchParams(window.location.search).get('bg') !== 'pale';
         document.body.classList.toggle('robert-night', night);
         return () => document.body.classList.remove('robert-night');
     }, []);

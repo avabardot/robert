@@ -1,5 +1,6 @@
 /* STAINED GLASS
-   The glass lives in the six empty cells either side of Robert.
+   The glass fills Robert's window: the six empty cells either side of him
+   and, behind him, the three he stands in.
    See StainedGlass.jsx for the three techniques and how to switch them. */
 
 /* PALETTE
@@ -17,7 +18,7 @@
    green is the #66FF66 Robert's text and wake-up flash already use, and ruby
    is Robert's own #8B0C14, for the odd jewel that ties the window to him.
    A theme is nothing more than a different set of these seven values. */
-.glass {
+:root {
     --glass-deep: 178 85% 13%;
     --glass-teal: 176 84% 30%;
     --glass-cyan: 180 91% 47%;
@@ -46,35 +47,58 @@
 .glass--top    { padding-bottom: 0; }
 .glass--bottom { padding-top: 0; }
 
-/* GLASS BEHIND ROBERT (?behind=on)
-   Two half-width pieces side by side, the right one mirrored, sitting under
-   everything else in his cell. For "under" to mean anything the cell has to
-   be its own stacking context, which is what isolation does. */
-.glass-host:has(> .glass-behind) {
+/* GLASS BEHIND ROBERT
+   One wide piece per cell, sitting under everything else in it. For "under"
+   to mean anything the cell has to be its own stacking context, which is
+   what isolation does. */
+.glass-host:has(> .glass--centre) {
     isolation: isolate;
     z-index: 1;
 }
-.glass-behind {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    display: flex;
-    pointer-events: none;
+/* ...which lifts his cells above the Wake button, so lift that back. */
+.WakeButton {
+    z-index: 2;
 }
-.glass-behind > .glass {
-    position: relative;
-    inset: auto;
-    flex: 1;
+.glass--centre {
+    z-index: -1;
     padding-left: 0;
 }
-.glass-behind > .glass > .glass-light { border-radius: 0; }
+.glass.glass--centre .glass-light { border-radius: 0; }
 
 /* Robert's stem has a solid black core (.plant-stem, z-index: -100) that has
    never been visible: that z-index drops it behind the page background.
    Isolating his cell would bring it back in front of the glass, so keep it
    hidden, as it always has been. */
-.glass-host:has(> .glass-behind) .plant-stem {
+.glass-host:has(> .glass--centre) .plant-stem {
     visibility: hidden;
+}
+
+/* HALO
+   The neon oval round Robert's head is the full width and height of his
+   cell, so the same oval is cut out of the panes behind it... */
+.glass--centre.glass--top {
+    -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, transparent 99%, #000 100%);
+            mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, transparent 99%, #000 100%);
+}
+/* ...and filled with a single piece of glass, palest next to him. */
+.glass-halo {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(closest-side,
+        hsl(var(--glass-pale)) 45%,
+        hsl(var(--glass-aqua)) 78%,
+        hsl(var(--glass-teal)) 100%);
+    transition: filter 2.5s ease-in-out, opacity 2.5s ease-in-out;
+    animation: glass-power-on 2.4s 1s ease-out both;
+}
+/* His head is laid out on a 12 x 7 grid whose hairlines cannot be seen on a
+   black page, but show up as a fine mesh the moment there is glass behind
+   them. Rub them out, leaving the cell that draws the head itself alone. */
+.glass-host:has(> .glass--centre) .planter-head-grid .grid:not(.eyeball-sub-4) {
+    box-shadow: none;
 }
 
 /* The right-hand lancet is the left one in a mirror. */
@@ -92,12 +116,18 @@
 
 /* Asleep, the window is unlit. Waking Robert turns the light on behind it,
    and from then on it breathes in time with him (pulsate-fwd is 6s too). */
-.glass--asleep .glass-light {
+.glass--asleep .glass-light,
+.glass-halo.glass--asleep {
     filter: saturate(0.45) brightness(0.92);
     opacity: 0.6;
 }
 .glass--awake .glass-light {
     animation: glass-breathe 6s ease-in-out infinite both;
+}
+.glass-halo.glass--awake {
+    animation:
+        glass-power-on 2.4s 1s ease-out both,
+        glass-breathe 6s ease-in-out infinite both;
 }
 
 @keyframes glass-power-on {
@@ -140,6 +170,9 @@
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(10, 1fr);
+}
+.glass--panes.glass--centre .glass-light {
+    grid-template-columns: repeat(12, 1fr);
 }
 .glass-pane {
     box-shadow:
@@ -199,13 +232,15 @@
 
 @media (prefers-reduced-motion: reduce) {
     .glass,
+    .glass-halo,
+    .glass-halo.glass--awake,
     .glass--awake .glass-light { animation: none; }
 }
 
-/* NIGHT (?bg=black)
+/* NIGHT
    App.css asks for a near-black page with green text, but the About page's
    stylesheet repaints .wrapper pale blue everywhere. This puts the night
-   back, on the home page only. */
+   back, on the home page only. (?bg=pale shows the old page.) */
 body.robert-night .wrapper {
     background-color: #010000;
     color: #66FF66;
@@ -222,7 +257,17 @@ body.robert-night .glass--awake {
     filter: drop-shadow(0 0 0.7em hsl(var(--glass-cyan) / 0.55));
 }
 /* ...and with Robert asleep the window is properly dark. */
-body.robert-night .glass--asleep .glass-light {
+body.robert-night .glass--asleep .glass-light,
+body.robert-night .glass-halo.glass--asleep {
     filter: saturate(0.6) brightness(0.32);
     opacity: 0.9;
+}
+
+/* The Wake button was drawn for the pale page: near-black lettering. At
+   night it becomes one more neon sign, in the white of Robert's tubes, on a
+   dark plate so the glass behind does not fight the words. */
+body.robert-night .WakeButton {
+    color: #fff7f7;
+    background: rgb(1 0 0 / 0.82);
+    border: 0.08em solid #e97272;
 }

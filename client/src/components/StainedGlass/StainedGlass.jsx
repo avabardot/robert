@@ -2,13 +2,15 @@ import React from 'react';
 import { useStoreContext } from '../../services/GlobalState';
 import './StainedGlass.css';
 
-// Stained glass for the six empty cells either side of Robert.
+// Stained glass for Robert's window: the six empty cells either side of him
+// and, behind him, the three he stands in.
 //
 // Three ways of making glass out of CSS, so they can be compared on the real
 // page. Pick one with ?glass=panes | gels | shards | off (default: panes).
-// Two more switches for trying things out:
-//   ?behind=on  - glass in the centre column too, behind Robert
-//   ?bg=black   - the page at night (handled in Pages/Home.jsx)
+// Two more switches, for comparing against how it used to look:
+//   ?behind=off - leave the centre column, where Robert stands, unglazed
+//   ?bg=pale    - the old pale blue page (handled in Pages/Home.jsx)
+//   ?halo=clear - nothing inside the oval round his head (default: one pane)
 //
 //   panes  - Robert's own technique. A CSS grid of empty divs, a hairline
 //            box-shadow for the lead, and his neon box-shadow recipe turned
@@ -27,7 +29,11 @@ function chosenVariant() {
 }
 
 function glassBehindRobert() {
-    return new URLSearchParams(window.location.search).get('behind') === 'on';
+    return new URLSearchParams(window.location.search).get('behind') !== 'off';
+}
+
+function haloIsGlass() {
+    return new URLSearchParams(window.location.search).get('halo') !== 'clear';
 }
 
 // Which third of the lancet each of Robert's outer cells is.
@@ -38,7 +44,7 @@ const CELLS = {
     3: { side: 'right', row: 'top' },
     6: { side: 'right', row: 'middle' },
     9: { side: 'right', row: 'bottom' },
-    // The column Robert stands in. Only glazed with ?behind=on.
+    // The column Robert stands in.
     2: { side: 'centre', row: 'top' },
     5: { side: 'centre', row: 'middle' },
     8: { side: 'centre', row: 'bottom' },
@@ -82,11 +88,11 @@ const PANES = {
     ],
 };
 
-// The centre column is drawn as a left half and its mirror image, so it is
-// symmetrical about Robert's stem. Same 6 x 10 grid, but here column 6 runs
-// down the middle of him. Pale glass sits closest to him, like a halo, and
-// the green gathers at the bottom, where the ground would be.
-const PANES_BEHIND = {
+// The centre column is twice as wide (12 x 10) and symmetrical about Robert's
+// stem, so only its left half is written down: column 6 runs down the middle
+// of him. Pale glass sits closest to him and the green gathers at the bottom,
+// where the ground would be.
+const HALF_BEHIND = {
     top: [
         '1/3/1/3 teal', '3/7/1/2 aqua',
         '3/5/2/5 aqua', '5/7/2/5 pale',
@@ -111,6 +117,23 @@ const PANES_BEHIND = {
         '1/2/8/11 teal', '2/3/9/11 green',
         '3/7/10/11 green',
     ],
+};
+
+// Unfold a half into the whole. A piece that reaches the middle carries on
+// across it as one piece of glass; every other piece gets a twin.
+function unfold(half) {
+    return half.flatMap((piece) => {
+        const [area, tone] = piece.split(' ');
+        const [c1, c2, r1, r2] = area.split('/').map(Number);
+        if (c2 === 7) return [`${c1}/${14 - c1}/${r1}/${r2} ${tone}`];
+        return [piece, `${14 - c2}/${14 - c1}/${r1}/${r2} ${tone}`];
+    });
+}
+
+const PANES_BEHIND = {
+    top: unfold(HALF_BEHIND.top),
+    middle: unfold(HALF_BEHIND.middle),
+    bottom: unfold(HALF_BEHIND.bottom),
 };
 
 function Panes({ row, behind }) {
@@ -228,11 +251,15 @@ export default function StainedGlass({ cell }) {
     ].join(' ');
 
     if (behind) {
+        const lit = state.awake === true ? 'glass--awake' : 'glass--asleep';
         return (
-            <div className="glass-behind" aria-hidden="true">
-                <div className={`${classes('left')} glass--inner`}>{light}</div>
-                <div className={`${classes('right')} glass--inner`}>{light}</div>
-            </div>
+            <>
+                <div className={classes('centre')} aria-hidden="true">{light}</div>
+                {/* The oval round Robert's head is one piece of glass. */}
+                {row === 'top' && variant === 'panes' && haloIsGlass() && (
+                    <div className={`glass-halo ${lit}`} aria-hidden="true" />
+                )}
+            </>
         );
     }
 
