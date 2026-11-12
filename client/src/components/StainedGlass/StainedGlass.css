@@ -1,0 +1,172 @@
+/* STAINED GLASS
+   The glass lives in the six empty cells either side of Robert.
+   See StainedGlass.jsx for the three techniques and how to switch them. */
+
+/* PALETTE
+   Each tone is the hue-opposite of one of Robert's own reds, at the same
+   saturation and lightness, written as bare "hue saturation lightness" so it
+   can be used at any opacity: hsl(var(--glass-teal) / .5).
+
+     Robert  #8B0C14  hsl(356 84% 30%)   ->  teal   hsl(176 84% 30%)
+     Robert  #e50b0b  hsl(  0 91% 47%)   ->  cyan   hsl(180 91% 47%)
+     Robert  #e97272  hsl(  0 73% 68%)   ->  aqua   hsl(180 73% 68%)
+     Robert  #3F0507  hsl(358 85% 13%)   ->  deep   hsl(178 85% 13%)
+     Robert  #fff7f7  hsl(  0 100% 98%)  ->  pale   hsl(180 85% 88%), deepened
+                                                 so it reads as glass, not paper
+
+   green is the #66FF66 Robert's text and wake-up flash already use, and ruby
+   is Robert's own #8B0C14, for the odd jewel that ties the window to him.
+   A theme is nothing more than a different set of these seven values. */
+.glass {
+    --glass-deep: 178 85% 13%;
+    --glass-teal: 176 84% 30%;
+    --glass-cyan: 180 91% 47%;
+    --glass-aqua: 180 73% 68%;
+    --glass-pale: 180 85% 88%;
+    --glass-green: 120 100% 70%;
+    --glass-ruby: 356 84% 30%;
+    --glass-lead: #1c0a0c;
+    --glass-lead-width: 0.09em;
+}
+
+/* The cells that hold glass. */
+.glass-host {
+    position: relative;
+}
+
+.glass {
+    position: absolute;
+    inset: 0;
+    /* Stay clear of Robert's neon frame and its rounded corners. */
+    padding: 0.55em 0 0.55em 0.75em;
+    pointer-events: none;
+    animation: glass-power-on 2.4s 1s ease-out both;
+}
+.glass--middle { padding-top: 0; padding-bottom: 0; }
+.glass--top    { padding-bottom: 0; }
+.glass--bottom { padding-top: 0; }
+
+/* The right-hand lancet is the left one in a mirror. */
+.glass--right { transform: scaleX(-1); }
+
+.glass-light {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    transition: filter 2.5s ease-in-out, opacity 2.5s ease-in-out;
+}
+.glass--top .glass-light    { border-top-left-radius: 0.9em; }
+.glass--bottom .glass-light { border-bottom-left-radius: 0.9em; }
+
+/* Asleep, the window is unlit. Waking Robert turns the light on behind it,
+   and from then on it breathes in time with him (pulsate-fwd is 6s too). */
+.glass--asleep .glass-light {
+    filter: saturate(0.45) brightness(0.92);
+    opacity: 0.6;
+}
+.glass--awake .glass-light {
+    animation: glass-breathe 6s ease-in-out infinite both;
+}
+
+@keyframes glass-power-on {
+    0%   { opacity: 0; }
+    35%  { opacity: 0.7; }
+    45%  { opacity: 0.15; }
+    100% { opacity: 1; }
+}
+@keyframes glass-breathe {
+    0%, 100% { filter: saturate(1) brightness(1); }
+    50%      { filter: saturate(1.25) brightness(1.08); }
+}
+
+/* TONES */
+.glass-tone-deep  { --c: var(--glass-deep); }
+.glass-tone-teal  { --c: var(--glass-teal); }
+.glass-tone-cyan  { --c: var(--glass-cyan); }
+.glass-tone-aqua  { --c: var(--glass-aqua); }
+.glass-tone-pale  { --c: var(--glass-pale); }
+.glass-tone-green { --c: var(--glass-green); }
+.glass-tone-ruby  { --c: var(--glass-ruby); }
+
+/* One piece of glass, whatever its outline: thinner and brighter in the
+   middle, colour pooling towards the edge, and a faint diagonal streak. */
+.glass-pane,
+.glass-shard {
+    background:
+        linear-gradient(118deg,
+            transparent 38%, hsl(0 0% 100% / 0.2) 47%, transparent 58%),
+        radial-gradient(120% 95% at 45% 40%,
+            hsl(var(--c) / 0.66), hsl(var(--c) / 0.96));
+}
+
+/* ------------------------------------------------------------- panes ---- */
+/* Robert's technique. His neon is
+       box-shadow: <white core>, <pink>, <red bloom>, inset <the same again>
+   The lead is the outer half of that reduced to one dark hairline; the glass
+   is the inset half, recoloured. */
+.glass--panes .glass-light {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+}
+.glass-pane {
+    box-shadow:
+        0 0 0 var(--glass-lead-width) var(--glass-lead),
+        inset 0 0 0.9em 0.05em hsl(var(--c) / 0.9),
+        inset 0 0 0.25em 0.05em hsl(0 0% 100% / 0.45);
+}
+
+/* -------------------------------------------------------------- gels ---- */
+/* No elements at all: four straight cuts, each one a hard-stop gradient
+       tint | lead | tint
+   multiplied together. Where two tints overlap they make a third colour,
+   the way two sheets of coloured film do. */
+.glass--gels .glass-light {
+    --w: 0.08em;
+    background:
+        linear-gradient(var(--a1),
+            hsl(180 73% 78%) calc(var(--p1) - var(--w)),
+            var(--glass-lead) 0 calc(var(--p1) + var(--w)),
+            hsl(180 100% 97%) 0),
+        linear-gradient(var(--a2),
+            hsl(176 70% 62%) calc(var(--p2) - var(--w)),
+            var(--glass-lead) 0 calc(var(--p2) + var(--w)),
+            hsl(170 100% 94%) 0),
+        linear-gradient(var(--a3),
+            hsl(120 100% 88%) calc(var(--p3) - var(--w)),
+            var(--glass-lead) 0 calc(var(--p3) + var(--w)),
+            hsl(186 80% 80%) 0),
+        linear-gradient(var(--a4),
+            hsl(180 100% 96%) calc(var(--p4) - var(--w)),
+            var(--glass-lead) 0 calc(var(--p4) + var(--w)),
+            hsl(178 60% 70%) 0),
+        linear-gradient(var(--a5),
+            hsl(0 0% 100%) calc(var(--p5) - var(--w)),
+            var(--glass-lead) 0 calc(var(--p5) + var(--w)),
+            hsl(190 85% 86%) 0);
+    background-blend-mode: multiply;
+    box-shadow: inset 0 0 0 var(--glass-lead-width) var(--glass-lead);
+}
+.glass--gels.glass--top    { --a1: 24deg;  --p1: 38%; --a2: 118deg; --p2: 55%; --a3: 172deg; --p3: 30%; --a4: 75deg;  --p4: 62%; --a5: 141deg; --p5: 74%; }
+.glass--gels.glass--middle { --a1: 152deg; --p1: 44%; --a2: 63deg;  --p2: 36%; --a3: 8deg;   --p3: 70%; --a4: 104deg; --p4: 52%; --a5: 38deg;  --p5: 22%; }
+.glass--gels.glass--bottom { --a1: 96deg;  --p1: 58%; --a2: 31deg;  --p2: 66%; --a3: 137deg; --p3: 41%; --a4: 168deg; --p4: 76%; --a5: 59deg;  --p5: 30%; }
+
+/* ------------------------------------------------------------ shards ---- */
+/* The backing is the lead; each shard is clipped to its polygon and then
+   shrunk a touch about its own middle so the backing shows between them. */
+.glass--shards .glass-light {
+    background: var(--glass-lead);
+}
+.glass-shard {
+    position: absolute;
+    inset: 0;
+    /* Glass is see-through, so give it daylight to sit on, not the lead. */
+    background-color: hsl(180 100% 97%);
+    transform: scale(0.94);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .glass,
+    .glass--awake .glass-light { animation: none; }
+}
