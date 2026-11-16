@@ -313,28 +313,6 @@ body.robert-night .BubbleGoodies :is(h2, p) {
     color: #fff7f7;
     text-shadow: 0 0 0.6em rgb(229 11 11 / 0.65);
 }
-/* The icon buttons under his words are a 46%-see-through red, which was
-   pink on the pale page and is nearly invisible on black. At night they take
-   the pink of his tubes. (The colour is set inline in the components, hence
-   !important.) */
-body.robert-night .bottom-market i {
-    color: #e97272 !important;
-    text-shadow: 0 0 0.22em rgb(229 11 11 / 0.8) !important;
-    transition: color 0.2s linear;
-}
-body.robert-night .bottom-market:hover i {
-    color: #fff7f7 !important;
-}
-body.robert-night .finalResultsDiv a {
-    font-family: 'Questrial', system-ui, sans-serif;
-    font-size: 1.15rem;
-    letter-spacing: 0.04em;
-    color: hsl(var(--glass-aqua));
-    text-underline-offset: 0.25em;
-}
-body.robert-night .finalResultsDiv a:hover {
-    color: #fff7f7;
-}
 
 /* GLASS WALL (?wall=off for plain black)
    The page itself is glazed: plain diamond quarries, the kind a church fills
@@ -380,13 +358,9 @@ body.robert-wall.robert-awake .wrapper::before {
     filter: saturate(0.95) brightness(0.72);
 }
 
-/* Two things that were invisible against plain black and are not against
-   glass: the hairline round the box that holds Robert's frame, and the red
-   glow of the results box while there is nothing in it. */
+/* Invisible against plain black, but not against glass: the hairline round
+   the box that holds Robert's frame. */
 body.robert-wall .grid-container-2 {
-    box-shadow: none;
-}
-body.robert-wall .DisplayBox:has(a:empty) {
     box-shadow: none;
 }
 
@@ -396,7 +370,7 @@ body.robert-wall .BubbleGoodies {
     width: fit-content;
     margin: 1.2em auto 0;
     margin-bottom: 1.2em;
-    padding: 1.1em 2em 0.6em;
+    padding: 1em 2em 0.45em;
     border-radius: 1.2em;
     background: rgb(1 0 0 / 0.8);
     box-shadow: 0 0 0 calc(var(--glass-lead-width) * 2) var(--glass-lead);

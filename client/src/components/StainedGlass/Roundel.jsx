@@ -12,7 +12,7 @@ import './Roundel.css';
 // Once lit, every roundel is also a way into Robert's world: point at one and
 // its picture is pulled down a spinning portal. Hide them with ?roundels=off.
 
-export function roundelsWanted() {
+function roundelsWanted() {
     return new URLSearchParams(window.location.search).get('roundels') !== 'off';
 }
 

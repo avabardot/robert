@@ -1,5 +1,4 @@
 import React from 'react'
-import Navbar from '../../NavigationComponent/Navbar'
 
 export default function ActivityGrid(props) {
     return (
