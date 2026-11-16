@@ -15,8 +15,19 @@
     border-radius: 50%;
     /* The rim: a band of lead, heavier than the joints inside. */
     box-shadow: 0 0 0 0.3em var(--glass-lead);
+    display: block;
     pointer-events: none;
+    -webkit-tap-highlight-color: transparent;
     animation: glass-power-on 2.4s 1.6s ease-out both;
+}
+/* Once Robert is awake a roundel is a way in. */
+.roundel--live {
+    pointer-events: auto;
+    cursor: pointer;
+}
+.roundel:focus-visible {
+    outline: 0.15em solid #fff7f7;
+    outline-offset: 0.5em;
 }
 
 /* No room beside the window: hang it underneath instead. */
@@ -82,3 +93,113 @@
 .strawberry-leaf--left  { left: 27%; transform: rotate(-12deg); }
 .strawberry-leaf--right { left: 54%; transform: scaleX(-1) rotate(-12deg); }
 .strawberry-leaf--top   { left: 40.5%; top: 9%; transform: rotate(45deg); }
+
+/* PORTAL
+   Point at a lit roundel (or tap it, or tab to it) and its picture is pulled
+   down a spinning hole in the glass. Each ring is a single div: a
+   repeating-conic-gradient makes the wedges, with a sliver of lead colour
+   between them, and the ring simply turns. Three of them turning against
+   each other is what makes it look like it is going somewhere. */
+.roundel-picture,
+.portal {
+    position: absolute;
+    inset: 0;
+}
+.roundel-picture {
+    transition: transform 0.9s cubic-bezier(0.6, 0, 0.9, 0.4), opacity 0.9s ease-in;
+}
+.roundel-field {
+    transition: opacity 0.7s ease-in-out;
+}
+.portal {
+    opacity: 0;
+    transition: opacity 0.7s ease-in-out;
+}
+.portal-ring,
+.portal-eye {
+    position: absolute;
+    border-radius: 50%;
+    box-shadow: 0 0 0 calc(var(--glass-lead-width) * 2) var(--glass-lead);
+}
+.portal-ring {
+    animation: portal-turn 16s linear infinite paused;
+}
+.portal-ring--outer {
+    inset: 0;
+    background:
+        radial-gradient(closest-side, rgb(1 0 0 / 0.45) 55%, transparent 100%),
+        repeating-conic-gradient(
+            var(--glass-lead) 0 1.6deg, hsl(var(--glass-teal)) 0 30deg,
+            var(--glass-lead) 0 31.6deg, hsl(var(--glass-cyan)) 0 60deg);
+}
+.portal-ring--middle {
+    inset: 16%;
+    animation-duration: 9s;
+    animation-direction: reverse;
+    background:
+        radial-gradient(closest-side, rgb(1 0 0 / 0.4) 50%, transparent 100%),
+        repeating-conic-gradient(
+            var(--glass-lead) 0 2.4deg, hsl(var(--glass-pale)) 0 45deg,
+            var(--glass-lead) 0 47.4deg, hsl(var(--glass-aqua)) 0 90deg);
+}
+/* The innermost ring is the strawberry's own red and green, on its way in. */
+.portal-ring--inner {
+    inset: 31%;
+    animation-duration: 4.5s;
+    background:
+        repeating-conic-gradient(
+            var(--glass-lead) 0 4deg, hsl(var(--glass-red)) 0 60deg,
+            var(--glass-lead) 0 64deg, hsl(var(--glass-ruby)) 0 120deg,
+            var(--glass-lead) 0 124deg, hsl(var(--glass-green)) 0 180deg);
+}
+/* The way through: night, like his world, with a rim of light. */
+.portal-eye {
+    inset: 42%;
+    background: radial-gradient(closest-side, #010000 55%, hsl(var(--glass-deep)) 100%);
+    box-shadow:
+        0 0 0 calc(var(--glass-lead-width) * 2) var(--glass-lead),
+        0 0 0.5em 0.15em hsl(var(--glass-pale) / 0.9);
+}
+@keyframes portal-turn {
+    to { transform: rotate(360deg); }
+}
+
+.roundel--live:is(:hover, :focus-visible, .roundel--open) .portal {
+    opacity: 1;
+}
+.roundel--live:is(:hover, :focus-visible, .roundel--open) .portal-ring {
+    animation-play-state: running;
+}
+.roundel--live:is(:hover, :focus-visible, .roundel--open) .roundel-field {
+    opacity: 0;
+}
+.roundel--live:is(:hover, :focus-visible, .roundel--open) .roundel-picture {
+    transform: rotate(540deg) scale(0);
+    opacity: 0.4;
+}
+
+/* A finger cannot hover, so nothing would ever hint that this is a way in.
+   On touch screens the portal shows through for a moment every so often. */
+@media (hover: none) {
+    .roundel--live:not(.roundel--open) .portal {
+        animation: portal-peek 9s ease-in-out 4s infinite;
+    }
+    .roundel--live:not(.roundel--open) .portal-ring {
+        animation-play-state: running;
+    }
+}
+@keyframes portal-peek {
+    0%, 78%, 100% { opacity: 0; }
+    86%, 92%      { opacity: 0.55; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .roundel,
+    .portal,
+    .portal-ring { animation: none !important; }
+    .roundel-picture { transition: opacity 0.3s; }
+    .roundel--live:is(:hover, :focus-visible, .roundel--open) .roundel-picture {
+        transform: none;
+        opacity: 0;
+    }
+}

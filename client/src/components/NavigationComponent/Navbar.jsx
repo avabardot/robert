@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { Link } from "react-router-dom";
 import { useStoreContext } from "../../services/GlobalState";
 import Popper from '@mui/material/Popper';
+import { roundelsWanted } from '../StainedGlass/Roundel';
 
 // MUI dropped makeStyles after v4 and this popper only ever needed one rule,
 // so it is a plain style object now (padding is the old theme.spacing(1)).
@@ -30,7 +31,9 @@ export default function Navbar() {
     
   return (
     <>  
-      <Link to="/world" className="bottom-market" style={state.display}><i style={{color:'rgba(255, 53, 46, 0.46)', fontSize:'5em', textShadow: '1px 2px 0px #010000'}} className="fa fa-map-signs" aria-hidden="true"></i></Link>
+      {/* The strawberry roundel is the way into Robert's world now. This
+          signpost only comes back if the roundels are switched off. */}
+      {!roundelsWanted() && <Link to="/world" className="bottom-market" style={state.display}><i style={{color:'rgba(255, 53, 46, 0.46)', fontSize:'5em', textShadow: '1px 2px 0px #010000'}} className="fa fa-map-signs" aria-hidden="true"></i></Link>}
       <Link onMouseEnter={handleClick} onMouseLeave={handleClose}  to="/aboutrobert" className="bottom-market" style={state.display}><i style={{color:'rgba(255, 53, 46, 0.46)', fontSize:'5em', textShadow: '1px 2px 0px #010000'}} className="fa fa-child" aria-hidden="true"></i></Link>
       <Popper id={id} open={open} anchorEl={anchorEl}>
         <div style={paperStyle}>About Robert</div>
