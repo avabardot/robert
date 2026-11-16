@@ -17,7 +17,6 @@
     "seed": "node scripts/seed.js"
   },
   "keywords": [],
-  "author": "Hannah Wenger",
   "license": "ISC",
   "devDependencies": {
     "concurrently": "^10.0.5",

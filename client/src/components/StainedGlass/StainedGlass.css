@@ -275,7 +275,7 @@ body.robert-night .glass-halo.glass--asleep {
    is not lit when the window is. Each of those shapes is just an empty div
    with a border-radius, so a see-through black background on it shades
    exactly the glass behind it and nothing else. (The halo is its own piece
-   of glass, and is simply never switched on: see StainedGlass.jsx.) */
+   of glass and does light up, unless ?halo=dark: see StainedGlass.jsx.) */
 body.robert-night .glass-host:has(> .glass--centre) :is(
     .sub-planter-body-2,
     .plant-leaf,
@@ -292,4 +292,112 @@ body.robert-night .WakeButton {
     color: #fff7f7;
     background: rgb(1 0 0 / 0.82);
     border: 0.08em solid #e97272;
+}
+
+/* WHAT ROBERT SAYS
+   Three colours each have one job on this page: red neon is Robert, teal is
+   glass, and near-white is anything to be read. So his words are set like
+   the Wake button - the white of his tubes with a little of his red round
+   it - in Questrial, the face the page already loads, instead of lime green
+   Courier. Size follows the screen, lines stay short enough to read and
+   break evenly. */
+body.robert-night .BubbleGoodies :is(h2, p) {
+    max-width: 30ch;
+    margin-bottom: 0.7em;
+    font-family: 'Questrial', system-ui, sans-serif;
+    font-size: clamp(1.25rem, 1rem + 1.1vw, 1.7rem);
+    font-weight: 400;
+    line-height: 1.35;
+    letter-spacing: 0.02em;
+    text-wrap: balance;
+    color: #fff7f7;
+    text-shadow: 0 0 0.6em rgb(229 11 11 / 0.65);
+}
+/* The icon buttons under his words are a 46%-see-through red, which was
+   pink on the pale page and is nearly invisible on black. At night they take
+   the pink of his tubes. (The colour is set inline in the components, hence
+   !important.) */
+body.robert-night .bottom-market i {
+    color: #e97272 !important;
+    text-shadow: 0 0 0.22em rgb(229 11 11 / 0.8) !important;
+    transition: color 0.2s linear;
+}
+body.robert-night .bottom-market:hover i {
+    color: #fff7f7 !important;
+}
+body.robert-night .finalResultsDiv a {
+    font-family: 'Questrial', system-ui, sans-serif;
+    font-size: 1.15rem;
+    letter-spacing: 0.04em;
+    color: hsl(var(--glass-aqua));
+    text-underline-offset: 0.25em;
+}
+body.robert-night .finalResultsDiv a:hover {
+    color: #fff7f7;
+}
+
+/* GLASS WALL (?wall=off for plain black)
+   The page itself is glazed: plain diamond quarries, the kind a church fills
+   the rest of a window with so the picture in the middle stands out. It is
+   one fixed layer with no elements in it. Two sets of stripes cross at 60
+   degrees; each stripe is a tint with a line of lead either side, and the two
+   sets are multiplied together, so every diamond is the product of the two
+   stripes that cross there. Three tints one way and four the other gives
+   twelve different diamonds before the pattern repeats.
+
+   It is kept darker than Robert's window and fades to black at the edges, so
+   the window stays the brightest thing on the page. */
+body.robert-wall .wrapper {
+    isolation: isolate;
+}
+body.robert-wall .wrapper::before {
+    --d: 3.4em;                         /* lead to lead */
+    --w: var(--glass-lead-width);
+    --l: var(--glass-lead);
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse 80% 80% at 50% 45%,
+            transparent 30%, rgb(1 0 0 / 0.55) 70%, rgb(1 0 0 / 0.92) 100%),
+        repeating-linear-gradient(60deg,
+            var(--l) 0 var(--w), hsl(178 62% 70%) 0 var(--d),
+            var(--l) 0 calc(var(--d) + var(--w)), hsl(186 70% 58%) 0 calc(var(--d) * 2),
+            var(--l) 0 calc(var(--d) * 2 + var(--w)), hsl(170 55% 78%) 0 calc(var(--d) * 3)),
+        repeating-linear-gradient(-60deg,
+            var(--l) 0 var(--w), hsl(180 60% 52%) 0 var(--d),
+            var(--l) 0 calc(var(--d) + var(--w)), hsl(176 70% 40%) 0 calc(var(--d) * 2),
+            var(--l) 0 calc(var(--d) * 2 + var(--w)), hsl(188 65% 60%) 0 calc(var(--d) * 3),
+            var(--l) 0 calc(var(--d) * 3 + var(--w)), hsl(172 60% 34%) 0 calc(var(--d) * 4));
+    background-blend-mode: normal, multiply, normal;
+    /* Unlit until Robert wakes. */
+    filter: saturate(0.5) brightness(0.3);
+    transition: filter 3s ease-in-out;
+}
+body.robert-wall.robert-awake .wrapper::before {
+    filter: saturate(0.95) brightness(0.72);
+}
+
+/* Two things that were invisible against plain black and are not against
+   glass: the hairline round the box that holds Robert's frame, and the red
+   glow of the results box while there is nothing in it. */
+body.robert-wall .grid-container-2 {
+    box-shadow: none;
+}
+body.robert-wall .DisplayBox:has(a:empty) {
+    box-shadow: none;
+}
+
+/* On glass, words need something solid behind them. What Robert says sits on
+   a dark plate edged in lead, like the inscription at the foot of a window. */
+body.robert-wall .BubbleGoodies {
+    width: fit-content;
+    margin: 1.2em auto 0;
+    margin-bottom: 1.2em;
+    padding: 1.1em 2em 0.6em;
+    border-radius: 1.2em;
+    background: rgb(1 0 0 / 0.8);
+    box-shadow: 0 0 0 calc(var(--glass-lead-width) * 2) var(--glass-lead);
 }

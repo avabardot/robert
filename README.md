@@ -160,16 +160,3 @@ More info lives on Robert's own `/aboutrobert` page once he is running.
 ## License
 
  ![Apache 2.0](/LICENSE)
-
-## Credit & Contact
-
-**Hannah Wenger**
-
-[Github](https://github.com/hawenger "Hannah Github")
-
-[Spotify](https://open.spotify.com/user/hannahinseattle?si=0LrDKZ8dSIm1MyJYuDdUAw "Hannah Spotify")
-
-**Email:** *hamecow@gmail.com*
-
-***Please feel free to reach out or connect on Spotify! Always looking for collaborators, conversation, learning opportunities and new music***
-
