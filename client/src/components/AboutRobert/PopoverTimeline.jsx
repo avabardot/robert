@@ -30,13 +30,13 @@ export default function PopoverTimeline() {
               <Typography  style={{maxWidth: '50em', background: 'aliceblue', borderRight:'.2em solid yellow', borderRadius:'1em', padding:'2em'}} >
               <div style={{background: 'aliceblue'}}>
                 <h2>CONTACT ME</h2>
-                <a style={{color:'#9DC3C2'}}href="mailto: hamecow@gmail.com">EMAIL:</a> hamecow@gmail.com
+                <a style={{color:'#9DC3C2'}} href="https://en.wikipedia.org/wiki/Markov_chain" target="_blank" rel="noopener noreferrer">MARKOV CHAINS:</a> en.wikipedia.org/wiki/Markov_chain
                 <br></br><br></br>
-                <a style={{color:'#2274A5'}} href="https://github.com/hawenger">GITHUB:</a> hawenger
+                <a style={{color:'#2274A5'}} href="https://www.kahlilgibran.com/images/The%20Prophet%20Ebook%20by%20Kahlil%20Gibran.pdf" target="_blank" rel="noopener noreferrer">A GEM:</a> The Prophet, Kahlil Gibran
                 <br></br><br></br>
-                <a style={{color:'#77A6B6'}} href="https://hawenger.github.io/">WEBSITE:</a> hawenger.github.io/
+                <a style={{color:'#77A6B6'}}>EMAIL:</a> placeholder
                 <br></br><br></br>
-                <a style={{color:'#4D7298'}} href="https://www.linkedin.com/in/hannah-wenger-5598131a5/"> LINKED-IN:</a> Hannah Wenger
+                <a style={{color:'#4D7298'}}> WEBSITE:</a> placeholder
                 <br></br><br></br>
               </div>
                 </Typography>
