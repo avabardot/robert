@@ -1,5 +1,4 @@
 import React from 'react';
-import '../components/AboutRobert/Assets/CSS/AboutRobert.css';
 import GridHolder from '../components/AboutRobert/GridHolder';
 
 

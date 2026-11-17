@@ -1,0 +1,377 @@
+/* STAINED GLASS
+   The glass fills Robert's window: the six empty cells either side of him
+   and, behind him, the three he stands in.
+   See StainedGlass.jsx for the three techniques and how to switch them. */
+
+/* PALETTE
+   Each tone is the hue-opposite of one of Robert's own reds, at the same
+   saturation and lightness, written as bare "hue saturation lightness" so it
+   can be used at any opacity: hsl(var(--glass-teal) / .5).
+
+     Robert  #8B0C14  hsl(356 84% 30%)   ->  teal   hsl(176 84% 30%)
+     Robert  #e50b0b  hsl(  0 91% 47%)   ->  cyan   hsl(180 91% 47%)
+     Robert  #e97272  hsl(  0 73% 68%)   ->  aqua   hsl(180 73% 68%)
+     Robert  #3F0507  hsl(358 85% 13%)   ->  deep   hsl(178 85% 13%)
+     Robert  #fff7f7  hsl(  0 100% 98%)  ->  pale   hsl(180 85% 88%), deepened
+                                                 so it reads as glass, not paper
+
+   green is the #66FF66 Robert's text and wake-up flash already use, and ruby
+   is Robert's own #8B0C14, for the odd jewel that ties the window to him.
+   A theme is nothing more than a different set of these seven values. */
+:root {
+    --glass-deep: 178 85% 13%;
+    --glass-teal: 176 84% 30%;
+    --glass-cyan: 180 91% 47%;
+    --glass-aqua: 180 73% 68%;
+    --glass-pale: 180 85% 88%;
+    --glass-green: 120 100% 70%;
+    --glass-ruby: 356 84% 30%;
+    --glass-red: 0 91% 47%;        /* Robert's #e50b0b, for pictures */
+    --glass-lead: #1c0a0c;
+    --glass-lead-width: 0.09em;
+}
+
+/* The cells that hold glass. */
+.glass-host {
+    position: relative;
+}
+
+.glass {
+    position: absolute;
+    inset: 0;
+    /* Stay clear of Robert's neon frame and its rounded corners. */
+    padding: 0.55em 0 0.55em 0.75em;
+    pointer-events: none;
+    animation: glass-power-on 2.4s 1s ease-out both;
+}
+.glass--middle { padding-top: 0; padding-bottom: 0; }
+.glass--top    { padding-bottom: 0; }
+.glass--bottom { padding-top: 0; }
+
+/* GLASS BEHIND ROBERT
+   One wide piece per cell, sitting under everything else in it. For "under"
+   to mean anything the cell has to be its own stacking context, which is
+   what isolation does. */
+.glass-host:has(> .glass--centre) {
+    isolation: isolate;
+    z-index: 1;
+}
+/* His head keeps the z-index Robert.css gives it, above the rest of him, so
+   the glow from the oval and his mouth still spills down over the stem. */
+.subgrid-2.glass-host:has(> .glass--centre) {
+    z-index: 100;
+}
+/* ...which lifts his cells above the Wake button, so lift that back. */
+.WakeButton {
+    z-index: 2;
+}
+.glass--centre {
+    z-index: -1;
+    padding-left: 0;
+}
+.glass.glass--centre .glass-light { border-radius: 0; }
+
+/* Robert's stem has a solid black core (.plant-stem, z-index: -100) that has
+   never been visible: that z-index drops it behind the page background.
+   Isolating his cell would bring it back in front of the glass, so keep it
+   hidden, as it always has been. */
+.glass-host:has(> .glass--centre) .plant-stem {
+    visibility: hidden;
+}
+
+/* HALO
+   The neon oval round Robert's head is the full width and height of his
+   cell, so the same oval is cut out of the panes behind it... */
+.glass--centre.glass--top {
+    -webkit-mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, transparent 99%, #000 100%);
+            mask-image: radial-gradient(ellipse 50% 50% at 50% 50%, transparent 99%, #000 100%);
+}
+/* ...and filled with a single piece of glass, palest next to him. */
+.glass-halo {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(closest-side,
+        hsl(var(--glass-pale)) 45%,
+        hsl(var(--glass-aqua)) 78%,
+        hsl(var(--glass-teal)) 100%);
+    transition: filter 2.5s ease-in-out, opacity 2.5s ease-in-out;
+    animation: glass-power-on 2.4s 1s ease-out both;
+}
+/* His head is laid out on a 12 x 7 grid whose hairlines cannot be seen on a
+   black page, but show up as a fine mesh the moment there is glass behind
+   them. Rub them out, leaving the cell that draws the head itself alone. */
+.glass-host:has(> .glass--centre) .planter-head-grid .grid:not(.eyeball-sub-4) {
+    box-shadow: none;
+}
+
+/* The right-hand lancet is the left one in a mirror. */
+.glass--right { transform: scaleX(-1); }
+
+.glass-light {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    transition: filter 2.5s ease-in-out, opacity 2.5s ease-in-out;
+}
+.glass--top .glass-light    { border-top-left-radius: 0.9em; }
+.glass--bottom .glass-light { border-bottom-left-radius: 0.9em; }
+
+/* Asleep, the window is unlit. Waking Robert turns the light on behind it,
+   and from then on it breathes in time with him (pulsate-fwd is 6s too). */
+.glass--asleep .glass-light,
+.glass-halo.glass--asleep {
+    filter: saturate(0.45) brightness(0.92);
+    opacity: 0.6;
+}
+.glass--awake .glass-light {
+    animation: glass-breathe 6s ease-in-out infinite both;
+}
+.glass-halo.glass--awake {
+    animation:
+        glass-power-on 2.4s 1s ease-out both,
+        glass-breathe 6s ease-in-out infinite both;
+}
+
+@keyframes glass-power-on {
+    0%   { opacity: 0; }
+    35%  { opacity: 0.7; }
+    45%  { opacity: 0.15; }
+    100% { opacity: 1; }
+}
+@keyframes glass-breathe {
+    0%, 100% { filter: saturate(1) brightness(1); }
+    50%      { filter: saturate(1.25) brightness(1.08); }
+}
+
+/* TONES */
+.glass-tone-deep  { --c: var(--glass-deep); }
+.glass-tone-teal  { --c: var(--glass-teal); }
+.glass-tone-cyan  { --c: var(--glass-cyan); }
+.glass-tone-aqua  { --c: var(--glass-aqua); }
+.glass-tone-pale  { --c: var(--glass-pale); }
+.glass-tone-green { --c: var(--glass-green); }
+.glass-tone-ruby  { --c: var(--glass-ruby); }
+.glass-tone-red   { --c: var(--glass-red); }
+
+/* One piece of glass, whatever its outline: thinner and brighter in the
+   middle, colour pooling towards the edge, and a faint diagonal streak. */
+.glass-pane,
+.glass-shard {
+    background:
+        linear-gradient(118deg,
+            transparent 38%, hsl(0 0% 100% / 0.2) 47%, transparent 58%),
+        radial-gradient(120% 95% at 45% 40%,
+            hsl(var(--c) / 0.66), hsl(var(--c) / 0.96));
+}
+
+/* ------------------------------------------------------------- panes ---- */
+/* Robert's technique. His neon is
+       box-shadow: <white core>, <pink>, <red bloom>, inset <the same again>
+   The lead is the outer half of that reduced to one dark hairline; the glass
+   is the inset half, recoloured. */
+.glass--panes .glass-light {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+}
+.glass--panes.glass--centre .glass-light {
+    grid-template-columns: repeat(12, 1fr);
+}
+.glass-pane {
+    box-shadow:
+        0 0 0 var(--glass-lead-width) var(--glass-lead),
+        inset 0 0 0.9em 0.05em hsl(var(--c) / 0.9),
+        inset 0 0 0.25em 0.05em hsl(0 0% 100% / 0.45);
+}
+
+/* -------------------------------------------------------------- gels ---- */
+/* No elements at all: four straight cuts, each one a hard-stop gradient
+       tint | lead | tint
+   multiplied together. Where two tints overlap they make a third colour,
+   the way two sheets of coloured film do. */
+.glass--gels .glass-light {
+    --w: 0.08em;
+    background:
+        linear-gradient(var(--a1),
+            hsl(180 73% 78%) calc(var(--p1) - var(--w)),
+            var(--glass-lead) 0 calc(var(--p1) + var(--w)),
+            hsl(180 100% 97%) 0),
+        linear-gradient(var(--a2),
+            hsl(176 70% 62%) calc(var(--p2) - var(--w)),
+            var(--glass-lead) 0 calc(var(--p2) + var(--w)),
+            hsl(170 100% 94%) 0),
+        linear-gradient(var(--a3),
+            hsl(120 100% 88%) calc(var(--p3) - var(--w)),
+            var(--glass-lead) 0 calc(var(--p3) + var(--w)),
+            hsl(186 80% 80%) 0),
+        linear-gradient(var(--a4),
+            hsl(180 100% 96%) calc(var(--p4) - var(--w)),
+            var(--glass-lead) 0 calc(var(--p4) + var(--w)),
+            hsl(178 60% 70%) 0),
+        linear-gradient(var(--a5),
+            hsl(0 0% 100%) calc(var(--p5) - var(--w)),
+            var(--glass-lead) 0 calc(var(--p5) + var(--w)),
+            hsl(190 85% 86%) 0);
+    background-blend-mode: multiply;
+    box-shadow: inset 0 0 0 var(--glass-lead-width) var(--glass-lead);
+}
+.glass--gels.glass--top    { --a1: 24deg;  --p1: 38%; --a2: 118deg; --p2: 55%; --a3: 172deg; --p3: 30%; --a4: 75deg;  --p4: 62%; --a5: 141deg; --p5: 74%; }
+.glass--gels.glass--middle { --a1: 152deg; --p1: 44%; --a2: 63deg;  --p2: 36%; --a3: 8deg;   --p3: 70%; --a4: 104deg; --p4: 52%; --a5: 38deg;  --p5: 22%; }
+.glass--gels.glass--bottom { --a1: 96deg;  --p1: 58%; --a2: 31deg;  --p2: 66%; --a3: 137deg; --p3: 41%; --a4: 168deg; --p4: 76%; --a5: 59deg;  --p5: 30%; }
+
+/* ------------------------------------------------------------ shards ---- */
+/* The backing is the lead; each shard is clipped to its polygon and then
+   shrunk a touch about its own middle so the backing shows between them. */
+.glass--shards .glass-light {
+    background: var(--glass-lead);
+}
+.glass-shard {
+    position: absolute;
+    inset: 0;
+    /* Glass is see-through, so give it daylight to sit on, not the lead. */
+    background-color: hsl(180 100% 97%);
+    transform: scale(0.94);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .glass,
+    .glass-halo,
+    .glass-halo.glass--awake,
+    .glass--awake .glass-light { animation: none; }
+}
+
+/* NIGHT
+   App.css asks for a near-black page with green text, but the About page's
+   stylesheet repaints .wrapper pale blue everywhere. This puts the night
+   back, on the home page only. (?bg=pale shows the old page.) */
+body.robert-night .wrapper {
+    background-color: #010000;
+    color: #66FF66;
+}
+
+/* Glass is see-through, and on a black page there is nothing behind it to
+   see: it goes grey. So at night each piece gets its own daylight to sit on,
+   and the lit window spills a little of its colour into the dark. */
+body.robert-night .glass-pane,
+body.robert-night .glass--gels .glass-light {
+    background-color: hsl(180 100% 97%);
+}
+body.robert-night .glass--awake {
+    filter: drop-shadow(0 0 0.7em hsl(var(--glass-cyan) / 0.55));
+}
+/* ...and with Robert asleep the window is properly dark. */
+body.robert-night .glass--asleep .glass-light,
+body.robert-night .glass-halo.glass--asleep {
+    filter: saturate(0.6) brightness(0.32);
+    opacity: 0.9;
+}
+
+/* ROBERT'S OWN SHAPES STAY DARK
+   The glass seen through him - inside the pot, its rim, his stem and leaf -
+   is not lit when the window is. Each of those shapes is just an empty div
+   with a border-radius, so a see-through black background on it shades
+   exactly the glass behind it and nothing else. (The halo is its own piece
+   of glass and does light up, unless ?halo=dark: see StainedGlass.jsx.) */
+body.robert-night .glass-host:has(> .glass--centre) :is(
+    .sub-planter-body-2,
+    .plant-leaf,
+    .plant-holder-top,
+    .plant-holder-base
+) {
+    background-color: rgb(1 0 0 / 0.7);
+}
+
+/* The Wake button was drawn for the pale page: near-black lettering. At
+   night it becomes one more neon sign, in the white of Robert's tubes, on a
+   dark plate so the glass behind does not fight the words. */
+body.robert-night .WakeButton {
+    color: #fff7f7;
+    background: rgb(1 0 0 / 0.82);
+    border: 0.08em solid #e97272;
+}
+
+/* WHAT ROBERT SAYS
+   Three colours each have one job on this page: red neon is Robert, teal is
+   glass, and near-white is anything to be read. So his words are set like
+   the Wake button - the white of his tubes with a little of his red round
+   it - in Questrial, the face the page already loads, instead of lime green
+   Courier. Size follows the screen, lines stay short enough to read and
+   break evenly. */
+body.robert-night .BubbleGoodies :is(h2, p) {
+    max-width: 30ch;
+    margin-bottom: 0.7em;
+    font-family: 'Questrial', system-ui, sans-serif;
+    font-size: clamp(1.25rem, 1rem + 1.1vw, 1.7rem);
+    font-weight: 400;
+    line-height: 1.35;
+    letter-spacing: 0.02em;
+    text-wrap: balance;
+    color: #fff7f7;
+    text-shadow: 0 0 0.6em rgb(229 11 11 / 0.65);
+}
+
+/* GLASS WALL (?wall=off for plain black)
+   The page itself is glazed: plain diamond quarries, the kind a church fills
+   the rest of a window with so the picture in the middle stands out. It is
+   one fixed layer with no elements in it. Two sets of stripes cross at 60
+   degrees; each stripe is a tint with a line of lead either side, and the two
+   sets are multiplied together, so every diamond is the product of the two
+   stripes that cross there. Three tints one way and four the other gives
+   twelve different diamonds before the pattern repeats.
+
+   It is kept darker than Robert's window and fades to black at the edges, so
+   the window stays the brightest thing on the page. */
+body.robert-wall .wrapper {
+    isolation: isolate;
+}
+body.robert-wall .wrapper::before {
+    --d: 3.4em;                         /* lead to lead */
+    --w: var(--glass-lead-width);
+    --l: var(--glass-lead);
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse 80% 80% at 50% 45%,
+            transparent 30%, rgb(1 0 0 / 0.55) 70%, rgb(1 0 0 / 0.92) 100%),
+        repeating-linear-gradient(60deg,
+            var(--l) 0 var(--w), hsl(178 62% 70%) 0 var(--d),
+            var(--l) 0 calc(var(--d) + var(--w)), hsl(186 70% 58%) 0 calc(var(--d) * 2),
+            var(--l) 0 calc(var(--d) * 2 + var(--w)), hsl(170 55% 78%) 0 calc(var(--d) * 3)),
+        repeating-linear-gradient(-60deg,
+            var(--l) 0 var(--w), hsl(180 60% 52%) 0 var(--d),
+            var(--l) 0 calc(var(--d) + var(--w)), hsl(176 70% 40%) 0 calc(var(--d) * 2),
+            var(--l) 0 calc(var(--d) * 2 + var(--w)), hsl(188 65% 60%) 0 calc(var(--d) * 3),
+            var(--l) 0 calc(var(--d) * 3 + var(--w)), hsl(172 60% 34%) 0 calc(var(--d) * 4));
+    background-blend-mode: normal, multiply, normal;
+    /* Unlit until Robert wakes. */
+    filter: saturate(0.5) brightness(0.3);
+    transition: filter 3s ease-in-out;
+}
+body.robert-wall.robert-awake .wrapper::before {
+    filter: saturate(0.95) brightness(0.72);
+}
+
+/* Invisible against plain black, but not against glass: the hairline round
+   the box that holds Robert's frame. */
+body.robert-wall .grid-container-2 {
+    box-shadow: none;
+}
+
+/* On glass, words need something solid behind them. What Robert says sits on
+   a dark plate edged in lead, like the inscription at the foot of a window. */
+body.robert-wall .BubbleGoodies {
+    width: fit-content;
+    margin: 1.2em auto 0;
+    margin-bottom: 1.2em;
+    padding: 1em 2em 0.45em;
+    border-radius: 1.2em;
+    background: rgb(1 0 0 / 0.8);
+    box-shadow: 0 0 0 calc(var(--glass-lead-width) * 2) var(--glass-lead);
+}

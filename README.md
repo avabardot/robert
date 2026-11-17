@@ -83,73 +83,38 @@ npm run cf:dev
 
 ## USE
 
-### VR World
-*After waking Robert*
+### Home
 
-#### Enter World
+* Press **WAKE ROBERT**. His window lights up and he says hello.
+* The four small round windows beside him are doors. Point at one and it opens into a spinning portal; click it (or tap it on a phone) to step into his world.
 
-* Three buttons appear below Robert after he is woken. 
-* Click on the middle button depicted as a sign.  
-* You are now entering Robert's world.
+### Robert's World
 
-#### Navigate World
+#### Getting in
 
-##### **Understanding Your Cursor**
-* The white circle in the middle of the screen is now your cursor.
+* Wait for the portal to finish turning, then press **BEGIN**. Turn your sound on first: that press is also what lets the browser play Robert's music.
 
-##### **Mobile Vs. Desktop**
-* MOBILE: The cursor will move as you move your phone
-* DESKTOP: Click the screen as you would a link, hold and move your mouse. This action will move the cursor.
+#### Looking around
 
-##### **Clicking**
-* Wait for the cursor to shrink in size.  
-* When the cursor returns to normal size, you have successfully clicked on the object.
+* **Desktop:** hold the mouse button and drag to look. `W` `A` `S` `D` to move.
+* **Phone:** drag to look, or just turn the phone.
+* **Headset:** press **BEGIN**, then the VR button in the bottom corner. Point a controller at things and pull the trigger. In a phone viewer with no controller, look at something and wait.
 
-#### Activate Music
+#### The strawberries
 
-##### **Activating Instrumental Music**
-* Center the white circle (your cursor) over the right **CENTER** strawberry.
-* After cursor signifies click (shrinks then grows), music should begin playing.
+Click a strawberry (they are labelled).
 
-*Music will play indefinitely until stopped by user*
+| Strawberry | What it does |
+| --- | --- |
+| **PLAY** | Robert composes a new piece and plays it. It carries on until stopped. |
+| **STOP** | Stops the music. |
+| **SING** | Robert makes up a song and sings it. The words appear as he sings them. He stops by himself at the end. |
+| **HUSH** | Stops him singing. |
 
-##### **Activating Vocals**
-* Center the white circle (your cursor) over the left **CENTER** strawberry.
-* After cursor signifies click (shrinks then grows), Robert should begin singing.
+#### Getting out
 
-*Robert will stop singing after finishing his "song"*
-
-#### Stop Music
-
-##### **Stop Instrumental Music**
-* Center the white circle (your cursor) over the right **OUTER** strawberry.
-* After cursor signifies click (shrinks then grows), music should stop playing.
-
-*Music will play indefinitely until stopped by user*
-
-##### **Stop Vocals**
-* Center the white circle (your cursor) over the left **OUTER** strawberry.
-* After cursor signifies click (shrinks then grows), Robert should stop singing.
-
-*Robert will stop singing after finishing his "song"*
-
-#### Exit World
-* Face the back of the world (opposite of strawberries).
-* Place cursor over door below "No Exit Sign" and allow cursor to perform click.
-* On success, user will be returned to home screen.
-
-### What's on Robert's Mind
-
-#### Smiley Face Button
-*After Click*
-* User will see a theme listed below the Robert animation such as "Touch" or "Mother."
-* A link will show at bottom of page reading, "SURPRISE".
-* The "Surprise" link will navigate user to associated web page.
-
-
-#### Frowny Face Button
-*After Click*
-* Robert will ask user if they would like to see something else.
+* **HOME**, top left.
+* Or turn right round: the portal you came through is behind you, under a sign reading NO EXIT. Click it.
 
 ## About Robert & Build
 
@@ -160,16 +125,3 @@ More info lives on Robert's own `/aboutrobert` page once he is running.
 ## License
 
  ![Apache 2.0](/LICENSE)
-
-## Credit & Contact
-
-**Hannah Wenger**
-
-[Github](https://github.com/hawenger "Hannah Github")
-
-[Spotify](https://open.spotify.com/user/hannahinseattle?si=0LrDKZ8dSIm1MyJYuDdUAw "Hannah Spotify")
-
-**Email:** *hamecow@gmail.com*
-
-***Please feel free to reach out or connect on Spotify! Always looking for collaborators, conversation, learning opportunities and new music***
-

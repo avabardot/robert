@@ -1,0 +1,365 @@
+/* ROUNDELS
+   Small round windows hung outside Robert's. See Roundel.jsx. */
+
+.RobertContainer {
+    position: relative;
+}
+
+/* Wide screens: two either side of the window, a little out of step. */
+.roundels {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+.roundel {
+    --size: 9em;
+    position: absolute;
+    height: var(--size);
+    width: var(--size);
+    border-radius: 50%;
+    /* The rim: a band of lead, heavier than the joints inside. */
+    box-shadow: 0 0 0 0.3em var(--glass-lead);
+    display: block;
+    color: inherit;
+    pointer-events: none;
+    -webkit-tap-highlight-color: transparent;
+    animation: glass-power-on 2.4s calc(1.6s + var(--n, 0) * 0.25s) ease-out both;
+}
+.roundel--strawberry { right: calc(100% + 2.5em); top: 4em; }
+.roundel--hourglass  { right: calc(100% + 2.5em); top: 25em; }
+.roundel--moon       { left: calc(100% + 2.5em);  top: 9em; }
+.roundel--wave       { left: calc(100% + 2.5em);  top: 30em; }
+
+/* Once Robert is awake a roundel is a way in. */
+.roundel--live {
+    pointer-events: auto;
+    cursor: pointer;
+}
+.roundel:focus-visible {
+    outline: 0.15em solid #fff7f7;
+    outline-offset: 0.5em;
+}
+
+/* No room beside the window: a row of four underneath it instead. Everything
+   inside a roundel is measured in em, so shrinking the font shrinks it all. */
+@media (max-width: 62em) {
+    .roundels {
+        position: static;
+        display: flex;
+        justify-content: center;
+        gap: 1.3em;
+        margin: 2.2em 0 1em;
+    }
+    .roundel {
+        position: relative;
+        inset: auto;
+        font-size: 0.72em;
+    }
+}
+
+.roundel-glass {
+    border-radius: 50%;
+    background: var(--glass-lead);
+}
+
+/* Sky */
+.roundel-field {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: 1fr 1.5fr 1fr;
+    grid-template-rows: 1fr 1.5fr 1fr;
+}
+
+/* STRAWBERRY */
+.strawberry-berry {
+    position: absolute;
+    left: 25%;
+    top: 31%;
+    height: 56%;
+    width: 50%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1.1fr 1fr;
+    overflow: hidden;
+    /* Broad shoulders, and a point at the bottom. */
+    border-radius: 50% 50% 50% 50% / 34% 34% 66% 66%;
+    box-shadow: 0 0 0 calc(var(--glass-lead-width) * 2) var(--glass-lead);
+}
+/* Seeds: two offset rows of pale dots, painted over the whole berry. */
+.strawberry-seeds {
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 0.11em 0.16em at center, hsl(var(--glass-pale)) 80%, transparent 100%) 0.1em 0.2em / 1.1em 1.3em,
+        radial-gradient(ellipse 0.11em 0.16em at center, hsl(var(--glass-pale)) 80%, transparent 100%) 0.65em 0.85em / 1.1em 1.3em;
+}
+
+/* Robert's leaf is a box with two opposite corners rounded off. */
+.strawberry-leaf {
+    position: absolute;
+    top: 17%;
+    height: 19%;
+    width: 19%;
+    border-radius: 0 85% 0 85%;
+    box-shadow:
+        0 0 0 calc(var(--glass-lead-width) * 1.5) var(--glass-lead),
+        inset 0 0 0.5em 0.05em hsl(var(--c) / 0.9);
+}
+.strawberry-leaf--left  { left: 27%; transform: rotate(-12deg); }
+.strawberry-leaf--right { left: 54%; transform: scaleX(-1) rotate(-12deg); }
+.strawberry-leaf--top   { left: 40.5%; top: 9%; transform: rotate(45deg); }
+
+/* MOON OVER THE OCEAN */
+.moon-stars {
+    position: absolute;
+    inset: 0 0 38% 0;
+    background:
+        radial-gradient(circle 0.07em at center, hsl(var(--glass-pale)) 70%, transparent 100%) 0.4em 0.3em / 2.9em 2.3em,
+        radial-gradient(circle 0.05em at center, hsl(var(--glass-pale)) 70%, transparent 100%) 1.7em 1.3em / 2.3em 3.1em;
+}
+.moon-disc {
+    position: absolute;
+    left: 31%;
+    top: 13%;
+    height: 38%;
+    width: 38%;
+    display: grid;
+    overflow: hidden;
+    border-radius: 50%;
+    box-shadow:
+        0 0 0 calc(var(--glass-lead-width) * 2) var(--glass-lead),
+        0 0 0.9em 0.25em hsl(var(--glass-pale) / 0.55);
+}
+.moon-shadow {
+    position: absolute;
+    left: 30%;
+    top: -14%;
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    box-shadow: 0 0 0 calc(var(--glass-lead-width) * 1.5) var(--glass-lead);
+}
+.moon-swell {
+    position: absolute;
+    height: 34%;
+    width: 115%;
+    /* a flat-bottomed box whose top is one long arc */
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    box-shadow:
+        0 0 0 calc(var(--glass-lead-width) * 1.5) var(--glass-lead),
+        inset 0 0 0.6em 0.05em hsl(var(--c) / 0.9);
+}
+.moon-swell--far  { left: -45%; top: 58%; }
+.moon-swell--mid  { left: 25%;  top: 66%; }
+.moon-swell--near { left: -20%; top: 78%; }
+/* The moon's light on the water. */
+.moon-glint {
+    position: absolute;
+    height: 2.6%;
+    border-radius: 1em;
+    background: hsl(var(--glass-pale));
+    box-shadow: 0 0 0.3em hsl(var(--glass-pale));
+}
+.moon-glint--far  { left: 43%; top: 71%; width: 14%; }
+.moon-glint--near { left: 46%; top: 86%; width: 8%; }
+
+/* SOUND WAVE */
+.wave-bars {
+    position: absolute;
+    inset: 0 13%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.wave-bar {
+    width: 9.5%;
+    height: calc(var(--h) * 1%);
+    border-radius: 1em;
+    box-shadow:
+        0 0 0 calc(var(--glass-lead-width) * 1.5) var(--glass-lead),
+        inset 0 0 0.5em 0.05em hsl(var(--c) / 0.9);
+}
+/* Once he is awake the song is playing. */
+.glass--awake .wave-bar {
+    animation: wave-sing 1.7s ease-in-out calc(var(--i) * -0.37s) infinite alternate;
+}
+@keyframes wave-sing {
+    from { height: calc(var(--h) * 0.5%); }
+    to   { height: calc(var(--h) * 1%); }
+}
+/* The line every bar is cut along. */
+.wave-axis {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(50% - var(--glass-lead-width));
+    height: calc(var(--glass-lead-width) * 2);
+    background: var(--glass-lead);
+}
+
+/* HOURGLASS */
+.hourglass-cap {
+    position: absolute;
+    left: 24%;
+    height: 7%;
+    width: 52%;
+    border-radius: 0.25em;
+    box-shadow:
+        0 0 0 calc(var(--glass-lead-width) * 1.5) var(--glass-lead),
+        inset 0 0 0.4em 0.05em hsl(var(--c) / 0.9);
+}
+.hourglass-cap--top    { top: 14%; }
+.hourglass-cap--bottom { top: 79%; }
+.hourglass-bulb {
+    position: absolute;
+    left: 29%;
+    height: 28.5%;
+    width: 42%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+    box-shadow: 0 0 0 calc(var(--glass-lead-width) * 2) var(--glass-lead);
+}
+/* Each bulb is a box with one end drawn in to a point. */
+.hourglass-bulb--top    { top: 21.5%; border-radius: 8% 8% 50% 50% / 10% 10% 90% 90%; }
+.hourglass-bulb--bottom { top: 50%;   border-radius: 50% 50% 8% 8% / 90% 90% 10% 10%; }
+.hourglass-sand {
+    position: absolute;
+    bottom: 0;
+}
+.hourglass-sand--top {
+    left: 0;
+    right: 0;
+    height: 46%;
+}
+.hourglass-sand--bottom {
+    left: 9%;
+    right: 9%;
+    height: 44%;
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+}
+.hourglass-stream {
+    position: absolute;
+    left: 47.5%;
+    top: 0;
+    height: 62%;
+    width: 5%;
+    background: hsl(var(--glass-red));
+}
+
+/* PORTAL
+   Point at a lit roundel (or tap it, or tab to it) and its picture is pulled
+   down a spinning hole in the glass. Each ring is a single div: a
+   repeating-conic-gradient makes the wedges, with a sliver of lead colour
+   between them, and the ring simply turns. Three of them turning against
+   each other is what makes it look like it is going somewhere. */
+.roundel-picture,
+.portal {
+    position: absolute;
+    inset: 0;
+}
+.roundel-picture {
+    transition: transform 0.9s cubic-bezier(0.6, 0, 0.9, 0.4), opacity 0.9s ease-in;
+}
+.roundel-field {
+    transition: opacity 0.7s ease-in-out;
+}
+.portal {
+    opacity: 0;
+    transition: opacity 0.7s ease-in-out;
+}
+.portal-ring,
+.portal-eye {
+    position: absolute;
+    border-radius: 50%;
+    box-shadow: 0 0 0 calc(var(--glass-lead-width) * 2) var(--glass-lead);
+}
+.portal-ring {
+    animation: portal-turn 16s linear infinite paused;
+}
+.portal-ring--outer {
+    inset: 0;
+    background:
+        radial-gradient(closest-side, rgb(1 0 0 / 0.45) 55%, transparent 100%),
+        repeating-conic-gradient(
+            var(--glass-lead) 0 1.6deg, hsl(var(--glass-teal)) 0 30deg,
+            var(--glass-lead) 0 31.6deg, hsl(var(--glass-cyan)) 0 60deg);
+}
+.portal-ring--middle {
+    inset: 16%;
+    animation-duration: 9s;
+    animation-direction: reverse;
+    background:
+        radial-gradient(closest-side, rgb(1 0 0 / 0.4) 50%, transparent 100%),
+        repeating-conic-gradient(
+            var(--glass-lead) 0 2.4deg, hsl(var(--glass-pale)) 0 45deg,
+            var(--glass-lead) 0 47.4deg, hsl(var(--glass-aqua)) 0 90deg);
+}
+/* The innermost ring is the picture's own colours, on their way in. */
+.roundel--strawberry { --portal-a: var(--glass-red);   --portal-b: var(--glass-ruby); --portal-c: var(--glass-green); }
+.roundel--moon       { --portal-a: var(--glass-pale);  --portal-b: var(--glass-deep); --portal-c: var(--glass-cyan); }
+.roundel--hourglass  { --portal-a: var(--glass-red);   --portal-b: var(--glass-pale); --portal-c: var(--glass-ruby); }
+.roundel--wave       { --portal-a: var(--glass-green); --portal-b: var(--glass-cyan); --portal-c: var(--glass-pale); }
+.portal-ring--inner {
+    inset: 31%;
+    animation-duration: 4.5s;
+    background:
+        repeating-conic-gradient(
+            var(--glass-lead) 0 4deg, hsl(var(--portal-a)) 0 60deg,
+            var(--glass-lead) 0 64deg, hsl(var(--portal-b)) 0 120deg,
+            var(--glass-lead) 0 124deg, hsl(var(--portal-c)) 0 180deg);
+}
+/* The way through: night, like his world, with a rim of light. */
+.portal-eye {
+    inset: 42%;
+    background: radial-gradient(closest-side, #010000 55%, hsl(var(--glass-deep)) 100%);
+    box-shadow:
+        0 0 0 calc(var(--glass-lead-width) * 2) var(--glass-lead),
+        0 0 0.5em 0.15em hsl(var(--glass-pale) / 0.9);
+}
+@keyframes portal-turn {
+    to { transform: rotate(360deg); }
+}
+
+.roundel--live:is(:hover, :focus-visible, .roundel--open) .portal {
+    opacity: 1;
+}
+.roundel--live:is(:hover, :focus-visible, .roundel--open) .portal-ring {
+    animation-play-state: running;
+}
+.roundel--live:is(:hover, :focus-visible, .roundel--open) .roundel-field {
+    opacity: 0;
+}
+.roundel--live:is(:hover, :focus-visible, .roundel--open) .roundel-picture {
+    transform: rotate(540deg) scale(0);
+    opacity: 0.4;
+}
+
+/* A finger cannot hover, so nothing would ever hint that this is a way in.
+   On touch screens the portal shows through for a moment every so often. */
+@media (hover: none) {
+    .roundel--live:not(.roundel--open) .portal {
+        /* one after another, not all four at once */
+        animation: portal-peek 12s ease-in-out calc(4s + var(--n, 0) * 2.6s) infinite;
+    }
+    .roundel--live:not(.roundel--open) .portal-ring {
+        animation-play-state: running;
+    }
+}
+@keyframes portal-peek {
+    0%, 78%, 100% { opacity: 0; }
+    86%, 92%      { opacity: 0.55; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .roundel,
+    .portal,
+    .portal-ring,
+    .wave-bar { animation: none !important; }
+    .roundel-picture { transition: opacity 0.3s; }
+    .roundel--live:is(:hover, :focus-visible, .roundel--open) .roundel-picture {
+        transform: none;
+        opacity: 0;
+    }
+}

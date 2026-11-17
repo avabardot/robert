@@ -1,9 +1,16 @@
-import React, { useRef } from "react";
+// Robert's song.
+//
+// The composing below is the original SwanSong component, kept as it was: a
+// random scale, four chord progressions for a root, third and sixth part,
+// three DuoSynths and three loops. What has changed is where it lives. It
+// used to run inside a React component, so every re-render built another
+// set of synths and loops that were never thrown away, and leaving the world
+// mid-song left the music running. Here it is built once, the first time it
+// is asked to play, and dispose() takes all of it down again.
 import * as Tone from "tone";
 
-const SwanSong = () => {
-  const playASongButton = useRef();
-  const stopASongButton = useRef();
+export function createMusic() {
+  const loops = [];
 
   let randomMoodScale;
   let sequence1;
@@ -150,7 +157,6 @@ const SwanSong = () => {
       (element) =>
         element + letterArray[Math.floor(Math.random() * letterArray.length)]
     );
-    console.log(root);
   }
 
   function thirdSynthPlacement() {
@@ -159,7 +165,6 @@ const SwanSong = () => {
       (element) =>
         element + letterArray[Math.floor(Math.random() * letterArray.length)]
     );
-    console.log(third);
   }
 
   function sixthSynthPlacement() {
@@ -168,7 +173,6 @@ const SwanSong = () => {
       (element) =>
         element + letterArray[Math.floor(Math.random() * letterArray.length)]
     );
-    console.log(sixth);
   }
 
   //Call to get final arrangments for three parts
@@ -230,7 +234,6 @@ const SwanSong = () => {
   function pickRandomOscillator() {
     randomOscillators.forEach((element) => {
       element = oscillators[Math.floor(Math.random() * oscillators.length)];
-      console.log(element);
       return element;
     });
   }
@@ -366,82 +369,67 @@ const SwanSong = () => {
   //    index++;
   //});
 
-  new Tone.Loop((time) => {
+  loops.push(new Tone.Loop((time) => {
     const notes = root;
     let note = notes[index % notes.length];
     synth.triggerAttackRelease(note, "8n", time);
     index++;
-  }, "8n").start();
+  }, "8n").start());
 
-  new Tone.Loop((time) => {
+  loops.push(new Tone.Loop((time) => {
     const notes2 = third;
     let note2 = notes2[index % notes2.length];
     synth1.triggerAttackRelease(note2, "8n", time);
     index++;
-  }, "8n").start();
+  }, "8n").start());
 
-  new Tone.Loop((time) => {
+  loops.push(new Tone.Loop((time) => {
     const notes3 = sixth;
     let note3 = notes3[index % notes3.length];
     synth2.triggerAttackRelease(note3, "8n", time);
     index++;
-  }, "8n").start();
+  }, "8n").start());
 
-  // Tone 15 dropped the Tone.Transport singleton in favour of getTransport(),
-  // and browsers will not start an audio context until a user gesture has
-  // resumed it, so wait for Tone.start() before the transport rolls.
-  const playASong = async () => {
-    createSong();
-    await Tone.start();
-    Tone.getTransport().start();
-    //setTimeout(() => {
-    //    Tone.getTransport().stop();
-    //}, 5000);
+  // How loud the song is right now, 0 to 1, for the world to move to.
+  const meter = new Tone.Meter({ normalRange: true, smoothing: 0.75 });
+  gain.connect(meter);
+
+  let playing = false;
+
+  return {
+    // Browsers only allow sound after a real click or tap; Tone.start() is
+    // what asks for it.
+    async play() {
+      createSong();
+      await Tone.start();
+      Tone.getTransport().start();
+      playing = true;
+    },
+
+    stop() {
+      Tone.getTransport().stop();
+      playing = false;
+    },
+
+    level() {
+      if (!playing) return 0;
+      const heard = meter.getValue();
+      return Math.min(1, (Array.isArray(heard) ? heard[0] : heard) * 4);
+    },
+
+    dispose() {
+      const transport = Tone.getTransport();
+      transport.stop();
+      transport.cancel();
+      playing = false;
+      loops.forEach((loop) => loop.dispose());
+      [synth, synth1, synth2, gain, gain1, gain2, meter].forEach((node) => node.dispose());
+    },
   };
+}
 
-  const stopASong = () => {
-    Tone.getTransport().stop();
-  };
-
-  return (
-    <>
-      <a-entity
-        ref={playASongButton}
-        onClick={playASong}
-        id="stopTheSongButton"
-        geometry="primitive: cone; height: 2; radiusBottom: 0.1; radiusTop: 1"
-        scale=""
-        position="1.2 0.859 -0.5"
-        material="src: #flowers; transparent: true; color: #a3d1ab"
-        id="stopSongButton"
-        rotation="0 180 0"
-      >
-        <a-entity
-          id="spheretop"
-          geometry="primitive: sphere; radius: .6"
-          position="0 1 0"
-          material="src: #strawberry"
-        ></a-entity>
-      </a-entity>
-      <a-entity
-        ref={stopASongButton}
-        onClick={stopASong}
-        id="startTheSongButton"
-        geometry="primitive: cone; height: 2; radiusBottom: 0.1; radiusTop: 1"
-        scale=""
-        position="3.4 0.859 0"
-        material="src: #flowers; transparent: true; color: #a3d1ab"
-        id="startSongButton"
-        rotation="0 180 0"
-      >
-        <a-entity
-          id="spheretop"
-          geometry="primitive: sphere; radius: .6"
-          position="0 1 0"
-          material="src: #strawberry"
-        ></a-entity>
-      </a-entity>
-    </>
-  );
-};
-export default SwanSong;
+// Asking for the audio context early, from the Begin button, means the first
+// strawberry plays straight away.
+export function unlockSound() {
+  return Tone.start().catch(() => {});
+}

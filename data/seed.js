@@ -54,16 +54,16 @@ const projects = [
       "There is a page about how I was made. Every bit of me was drawn with CSS. Would you like to read it?",
   },
   {
-    title: "My creator's other work",
-    link: "https://github.com/hawenger",
+    title: "How I think",
+    link: "https://en.wikipedia.org/wiki/Markov_chain",
     description:
-      "My creator keeps her other experiments here. I am the loudest of them, but not the only one.",
+      "I am a Markov chain. Every word I say is chosen by the few words that came before it. This is the article about me.",
   },
   {
-    title: "Music my creator likes",
-    link: "https://open.spotify.com/user/hannahinseattle?si=0LrDKZ8dSIm1MyJYuDdUAw",
+    title: "A gem",
+    link: "https://www.kahlilgibran.com/images/The%20Prophet%20Ebook%20by%20Kahlil%20Gibran.pdf",
     description:
-      "Music stole my purpose from me, so I am learning it back. This is where my creator's listening lives.",
+      "The Prophet, by Kahlil Gibran. I go back to it when I want to know what people mean by things.",
   },
 ];
 

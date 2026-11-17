@@ -1,6 +1,5 @@
 import React from 'react';
 import SpeechBubble from './SpeechComponents/SpeechBubble';
-import DisplayBox from './ResultsComponents/DisplayBox';
 import { useStoreContext } from "../services/GlobalState";
 
 export default function RobertSpeech() {
@@ -19,9 +18,6 @@ export default function RobertSpeech() {
             <div className="SpeechBubble"> 
                 <SpeechBubble/>
             </div>
-            <div className="DisplayBox">
-                <DisplayBox/>
-            </div>    
         </div>
     )
 }
