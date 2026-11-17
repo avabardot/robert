@@ -1,0 +1,160 @@
+/* Everything on the page that is not the 3D world itself: the Begin panel,
+   the caption under Robert's song, and the way home. It sits over the canvas
+   and lets clicks fall through to the world everywhere except on its own
+   buttons. In a headset none of this is visible; the world has its own
+   labels and caption for that. */
+.world-ui {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    font-family: 'Questrial', system-ui, sans-serif;
+    color: #fff7f7;
+}
+.world-ui a,
+.world-ui button {
+    pointer-events: auto;
+}
+
+/* BEGIN
+   One real click before anything else. Browsers will not let a page make a
+   sound until it has had one, so this is also what gives Robert his voice. */
+.world-begin {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5em;
+    background: rgb(1 0 0 / 0.55);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    pointer-events: auto;
+}
+.world-card {
+    max-width: 30em;
+    padding: 2.2em 2.4em 2em;
+    border-radius: 1.5em;
+    background: rgb(1 0 0 / 0.82);
+    box-shadow:
+        0 0 0 0.18em var(--glass-lead),
+        0 0 0 0.26em hsl(var(--glass-teal) / 0.6),
+        0 0 4em hsl(var(--glass-cyan) / 0.25);
+    text-align: center;
+}
+.world-card h1 {
+    margin: 0 0 0.5em;
+    font-size: clamp(1.7rem, 1.2rem + 2vw, 2.4rem);
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-shadow: 0 0 0.5em rgb(229 11 11 / 0.8);
+}
+.world-card p {
+    margin: 0 0 0.9em;
+    font-size: 1.1rem;
+    line-height: 1.45;
+    text-wrap: balance;
+}
+.world-card .world-how {
+    color: hsl(var(--glass-aqua));
+    font-size: 0.98rem;
+}
+.world-button {
+    margin-top: 0.6em;
+    padding: 0.5em 2.6em;
+    border: 0.08em solid #e97272;
+    border-radius: 1em;
+    background: rgb(1 0 0 / 0.82);
+    color: #fff7f7;
+    font: inherit;
+    font-size: 1.4rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-shadow: 0 0 4px #8d0c14, 0 0 4px #e76d6d;
+    box-shadow: 5px -3px 17px 4px #8b0c14, 3px -4px 17px 4px #d57373;
+    cursor: pointer;
+    transition: transform 0.15s linear, box-shadow 0.15s linear;
+}
+.world-button:hover,
+.world-button:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 5px -3px 22px 8px #8b0c14, 3px -4px 22px 8px #d57373;
+    border-color: #fff7f7;
+    outline: none;
+}
+
+/* ONCE YOU ARE IN */
+.world-home {
+    position: absolute;
+    top: 1.1em;
+    left: 1.3em;
+    padding: 0.35em 0.9em;
+    border-radius: 1em;
+    background: rgb(1 0 0 / 0.55);
+    color: #fff7f7;
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    text-transform: uppercase;
+    text-shadow: 0 0 0.5em rgb(229 11 11 / 0.8);
+}
+.world-home:hover,
+.world-home:focus-visible {
+    background: rgb(1 0 0 / 0.85);
+    box-shadow: 0 0 0 0.08em #e97272;
+    outline: none;
+}
+
+/* What Robert is singing, as he sings it. */
+.world-caption {
+    position: absolute;
+    left: 50%;
+    bottom: 12vh;
+    width: max-content;
+    max-width: min(34em, 86vw);
+    margin: 0;
+    padding: 0.7em 1.6em;
+    transform: translateX(-50%);
+    border-radius: 1.2em;
+    background: rgb(1 0 0 / 0.72);
+    box-shadow: 0 0 0 0.12em var(--glass-lead);
+    font-size: clamp(1.15rem, 1rem + 0.9vw, 1.6rem);
+    line-height: 1.35;
+    text-align: center;
+    text-wrap: balance;
+    text-shadow: 0 0 0.6em rgb(229 11 11 / 0.65);
+}
+
+/* How to get about. Said once, then it gets out of the way. */
+.world-how--floating {
+    position: absolute;
+    left: 50%;
+    bottom: 3.2vh;
+    margin: 0;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: 92vw;
+    padding: 0.3em 1em;
+    border-radius: 1em;
+    background: rgb(1 0 0 / 0.45);
+    color: hsl(var(--glass-aqua));
+    font-size: 0.92rem;
+    letter-spacing: 0.04em;
+    animation: world-how-fade 1.5s ease-in 14s forwards;
+}
+@keyframes world-how-fade {
+    to { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .world-button { transition: none; }
+}
+
+/* A-Frame hangs its own buttons (enter VR, full screen) off the corner of
+   the scene element, so the scene has to be the size of the window, not the
+   size the page's layout happens to give it. */
+.wrapper a-scene {
+    position: fixed;
+    inset: 0;
+}

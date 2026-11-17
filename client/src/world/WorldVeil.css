@@ -1,0 +1,46 @@
+/* The loading screen for Robert's world. The rings are the ones the roundels
+   on the home page use (see PORTAL in components/StainedGlass/Roundel.css);
+   here they are simply switched on and left running. */
+.world-veil {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2em;
+    background: #010000;
+    color: #fff7f7;
+    font-family: 'Questrial', system-ui, sans-serif;
+}
+.world-veil-portal {
+    --portal-a: var(--glass-red);
+    --portal-b: var(--glass-ruby);
+    --portal-c: var(--glass-green);
+    position: relative;
+    width: min(46vmin, 17em);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow:
+        0 0 0 0.3em var(--glass-lead),
+        0 0 3.5em 0.4em hsl(var(--glass-cyan) / 0.35);
+}
+.world-veil-portal .portal {
+    opacity: 1;
+}
+.world-veil-portal .portal-ring {
+    animation-play-state: running;
+}
+.world-veil-note {
+    margin: 0;
+    font-size: 1.1rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    text-shadow: 0 0 0.6em rgb(229 11 11 / 0.7);
+}
+.world-veil a {
+    color: hsl(var(--glass-aqua));
+    text-underline-offset: 0.25em;
+}
